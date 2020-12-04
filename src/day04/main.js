@@ -1,35 +1,26 @@
 const { getInputs } = require('../../utils/files')
 
+function minMax(value, min, max) {
+  const number = Number(value)
+  return number >= min && number <= max
+}
+
 const requiredFields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
-
 const requiredFieldValidations = {
-  byr: (v) => {
-    const n = Number(v)
-    return n >= 1920 && n <= 2002
-  },
-  iyr: (v) => {
-    const n = Number(v)
-    return n >= 2010 && n <= 2020
-  },
-  eyr: (v) => {
-    const n = Number(v)
-    return n >= 2020 && n <= 2030
-  },
+  byr: (v) => minMax(v, 1920, 2002),
+  iyr: (v) => minMax(v, 2010, 2020),
+  eyr: (v) => minMax(v, 2020, 2030),
   hgt: (v) => {
-    if (!v) return false
-
-    const number = Number(v.substring(0, v.length - 2))
+    const number = v.substring(0, v.length - 2)
     const type = v.substring(v.length - 2)
 
     if (type === 'in') {
-      return number >= 59 && number <= 76
+      return minMax(number, 59, 76)
     } else if (type === 'cm') {
-      return number >= 150 && number <= 193
+      return minMax(number, 150, 193)
     }
   },
   hcl: v => {
-    if (!v) return false
-
     const hash = v[0]
     const values = v.substring(1).split('')
 
@@ -44,8 +35,6 @@ const requiredFieldValidations = {
     return ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].includes(v)
   },
   pid: v => {
-    if (!v) return false
-
     const split = v.split('')
 
     if (split.length !== 9) return false
@@ -54,9 +43,6 @@ const requiredFieldValidations = {
       return ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(value)
     })
   },
-  cid: () => {
-    return true
-  }
 }
 
 function extractPassports() {
@@ -85,7 +71,7 @@ function extractPassports() {
 const a = () => {
   const passports = extractPassports()
 
-  const validPassports = passports.reduce((acc, p) => {
+  const validPassportCount = passports.reduce((acc, p) => {
     if (requiredFields.every(field => p[field])) {
       return acc + 1
     }
@@ -93,28 +79,30 @@ const a = () => {
     return acc
   }, 0)
 
-  console.log(`a = ${validPassports}`)
+  console.log(`a = ${validPassportCount}`)
 }
 
 const b = () => {
   const passports = extractPassports()
 
-  const validPassports = passports.reduce((acc, p) => {
+  const validPassportCount = passports.reduce((acc, p) => {
     const allRequiredFieldsValidated = requiredFields.every(field => {
       const validator = requiredFieldValidations[field]
       const value = p[field]
 
-      return validator(value)
+      if (!value) return false
 
+      return validator(value)
     })
 
     if (allRequiredFieldsValidated) {
       return acc + 1
     }
+
     return acc
   }, 0)
 
-  console.log(`b = ${validPassports}`)
+  console.log(`b = ${validPassportCount}`)
 }
 
 a()
