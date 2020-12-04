@@ -2,6 +2,63 @@ const { getInputs } = require('../../utils/files')
 
 const requiredFields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
+const requiredFieldValidations = {
+  byr: (v) => {
+    const n = Number(v)
+    return n >= 1920 && n <= 2002
+  },
+  iyr: (v) => {
+    const n = Number(v)
+    return n >= 2010 && n <= 2020
+  },
+  eyr: (v) => {
+    const n = Number(v)
+    return n >= 2020 && n <= 2030
+  },
+  hgt: (v) => {
+    if (!v) return false
+
+    const number = Number(v.substring(0, v.length - 2))
+    const type = v.substring(v.length - 2)
+
+    if (type === 'in') {
+      return number >= 59 && number <= 76
+    } else if (type === 'cm') {
+      return number >= 150 && number <= 193
+    }
+  },
+  hcl: v => {
+    if (!v) return false
+
+    const hash = v[0]
+    const values = v.substring(1).split('')
+
+    if (hash !== '#') return false
+    if (values.length !== 6) return false
+
+    return values.every(value => {
+      return ['a', 'b', 'c', 'd', 'e', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(value)
+    })
+  },
+  ecl: v => {
+    return ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].includes(v)
+  },
+  pid: v => {
+    if (!v) return false
+
+    const split = v.split('')
+
+    if (split.length !== 9) return false
+
+    return split.every(value => {
+      return ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(value)
+    })
+  },
+  cid: () => {
+    return true
+  }
+}
+
 function extractPassports() {
   const inputs = getInputs(4)
 
@@ -20,8 +77,6 @@ function extractPassports() {
       acc[k] = v
       return acc
     }, {})
-
-    return properties
   })
 
   return passports
@@ -42,7 +97,24 @@ const a = () => {
 }
 
 const b = () => {
-  console.log(`b = ${'?'}`)
+  const passports = extractPassports()
+
+  const validPassports = passports.reduce((acc, p) => {
+    const allRequiredFieldsValidated = requiredFields.every(field => {
+      const validator = requiredFieldValidations[field]
+      const value = p[field]
+
+      return validator(value)
+
+    })
+
+    if (allRequiredFieldsValidated) {
+      return acc + 1
+    }
+    return acc
+  }, 0)
+
+  console.log(`b = ${validPassports}`)
 }
 
 a()
