@@ -1,43 +1,53 @@
-const { getInputs } = require('../../utils/files')
+const { getInputs } = require("../../utils/files");
 
-function parseInputs () {
-  const inputs = getInputs(2)
+function parseInputs() {
+  const inputs = getInputs(2);
 
-  return inputs.map(i => {
-    const values = i.split(/ |: |-/g)
+  return inputs.map((input) => {
+    const values = input.split(/ |: |-/g);
 
-    return values.map(value => {
-      return !isNaN(value) ? Number(value) : value
-    })
-  })
+    return values.map((value) => {
+      return !isNaN(value) ? Number(value) : value;
+    });
+  });
 }
 
-function a () {
-  const inputs = parseInputs()
-
+function a() {
+  const inputs = parseInputs();
 
   const validPasswordCount = inputs.reduce((acc, input) => {
-    const [min, max, char, password] = input
-    // console.log("🚀 ~ file: main.js ~ line 22 ~ validPasswords ~ password", password)
+    const [min, max, char, password] = input;
 
-    const count = password.split(char).length - 1
+    const count = password.split(char).length - 1;
 
-    if(count >= min && count <= max) {
-      return acc + 1
+    if (count >= min && count <= max) {
+      return acc + 1;
     }
 
-    return acc
-  }, 0)
+    return acc;
+  }, 0);
 
-  console.log(`day 01 a => ${validPasswordCount}`)
+  console.log(`day 02 a => ${validPasswordCount}`);
 }
 
+function b() {
+  const inputs = parseInputs();
 
-// function b () {
-//   const { orderedLow, orderedHigh } = getOrderedInputs()
-//   const value = find2020In3Inputs(orderedLow, orderedHigh)
-//   console.log(`day 01 b => ${value}`)
-// }
+  const validPasswordCount = inputs.reduce((acc, input) => {
+    const [min, max, char, password] = input;
 
-a()
-b()
+    const c1 = password[min - 1] === char;
+    const c2 = password[max - 1] === char;
+
+    if (c1 !== c2) {
+      return acc + 1;
+    }
+
+    return acc;
+  }, 0);
+
+  console.log(`day 02 b => ${validPasswordCount}`);
+}
+
+a();
+b();
