@@ -17,11 +17,40 @@ function generateSeatID (seatStr) {
 }
 
 const a = () => {
-  console.log(`a = ${'?'}`)
+  const largestSeatId = inputs.reduce((largestId, seatStr) => {
+    const seatId = generateSeatID(seatStr)
+
+    if(seatId > largestId) return seatId
+
+    return largestId
+  }, 0)
+
+  console.log(`a = ${largestSeatId}`)
+}
+
+function getMissingSeatId (seatList) {
+  let lastSeatId = seatList[0]
+
+  for(let i = 1; i < seatList.length; i++){
+    const seatId = seatList[i]
+
+    if(seatId - lastSeatId !== 1) return seatId - 1
+
+    lastSeatId = seatId
+  }
 }
 
 const b = () => {
-  console.log(`b = ${'?'}`)
+  const seatList = inputs.reduce((acc, seatStr) => {
+    const seatId = generateSeatID(seatStr)
+    acc.push(seatId)
+    return acc
+  }, [])
+  seatList.sort((a, b) => a - b)
+  
+  const missingSeatId = getMissingSeatId(seatList)
+  
+  console.log(`b = ${missingSeatId}`)
 }
 
 a()
