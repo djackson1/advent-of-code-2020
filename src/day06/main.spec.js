@@ -20,7 +20,8 @@ describe("day 6", () => {
 
     describe('multiple groups', () => { 
       const groupExamples = [
-        { groups: [["abcx", "abcy", "abcz"], ['a','b']], result: 8 }
+        { groups: [["abcx", "abcy", "abcz"], ['a','b']], result: 8 },
+        { groups: [['abc'],['a','b','c'], ['ab','ac'],['a','a','a','a'],['b']], result: 11 }
       ]
 
       groupExamples.forEach(({ groups, result }, id) => {
