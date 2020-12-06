@@ -25,8 +25,13 @@ const b = () => {
   console.log(\`b = \${'?'}\`)
 }
 
-a()
-b()" >> $folder_path/main.js
+var runningAsScript = !module.parent;
+if (runningAsScript) {
+  a();
+  b();
+}
+
+module.exports = {}" >> $folder_path/main.js
 
 echo -n > $folder_path/main.spec.js
 echo "const chai = require('chai')

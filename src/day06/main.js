@@ -47,14 +47,12 @@ function getSumOfGroupUniqueAnswers(groups) {
 }
 
 function getUniqueCountsInGroups(groups) {
-  const uniques = groups.reduce((acc, groupAnswers) => {
-    const groupTotal = groupAnswers.length;
-
+  return groups.reduce((uniqueTotal, groupAnswers) => {
     const uniqueAnswers = getUniqueGroupAnswers(groupAnswers);
 
-    const uniqueInGroup = Object.entries(uniqueAnswers).reduce(
-      (acc, [answer, count]) => {
-        if (count === groupTotal) {
+    const uniqueCountInGroup = Object.values(uniqueAnswers).reduce(
+      (acc, answerCount) => {
+        if (answerCount === groupAnswers.length) {
           return acc + 1;
         }
 
@@ -63,17 +61,12 @@ function getUniqueCountsInGroups(groups) {
       0
     );
 
-    acc.push(uniqueInGroup);
-    return acc;
-  }, []);
-  console.log("🚀 ~ file: main.js ~ line 65 ~ uniques ~ uniques", uniques);
-
-  return uniques.reduce((count, uniqueCount) => count + uniqueCount, 0);
+    return uniqueTotal + uniqueCountInGroup;
+  }, 0);
 }
 
 const a = () => {
   const inputs = getInputsSplitByDoubleNewline();
-
   const result = getSumOfGroupUniqueAnswers(inputs);
 
   console.log(`a = ${result}`);
@@ -81,10 +74,9 @@ const a = () => {
 
 const b = () => {
   const inputs = getInputsSplitByDoubleNewline();
+  const uniqueCount = getUniqueCountsInGroups(inputs);
 
-  const uniques = getUniqueCountsInGroups(inputs);
-
-  console.log(`b = ${uniques}`);
+  console.log(`b = ${uniqueCount}`);
 };
 
 var runningAsScript = !module.parent;
