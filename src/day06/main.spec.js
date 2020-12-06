@@ -1,6 +1,6 @@
 const chai = require("chai");
 const { expect } = chai;
-const { getUniqueGroupAnswerCount } = require("./main");
+const { getUniqueGroupAnswerCount, getSumOfGroupUniqueAnswers } = require("./main");
 
 describe("day 6", () => {
   describe("part a examples", () => {
@@ -17,6 +17,18 @@ describe("day 6", () => {
         });
       });
     });
+
+    describe('multiple groups', () => { 
+      const groupExamples = [
+        { groups: [["abcx", "abcy", "abcz"], ['a','b']], result: 8 }
+      ]
+
+      groupExamples.forEach(({ groups, result }, id) => {
+        it(`scenario ${id + 1} should reutrn a sum of ${result} for multiple groups`, () => {
+          expect(getSumOfGroupUniqueAnswers(groups)).to.equal(result);
+        })
+      })
+    })
   });
 
   describe("part b examples", () => {});
