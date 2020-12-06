@@ -79,7 +79,7 @@ const b = () => {
   console.log(`b = ${uniqueCount}`);
 };
 
-var runningAsScript = !module.parent;
+var runningAsScript = require.main === module
 if (runningAsScript) {
   a();
   b();

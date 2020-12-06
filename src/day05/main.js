@@ -53,8 +53,11 @@ const b = () => {
   console.log(`b = ${missingSeatId}`)
 }
 
-a()
-b()
+var runningAsScript = require.main === module
+if (runningAsScript) {
+  a();
+  b();
+}
 
 module.exports = {
   generateSeatID

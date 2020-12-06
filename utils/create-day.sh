@@ -25,7 +25,7 @@ const b = () => {
   console.log(\`b = \${'?'}\`)
 }
 
-var runningAsScript = !module.parent;
+var runningAsScript = require.main === module
 if (runningAsScript) {
   a();
   b();

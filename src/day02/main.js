@@ -49,5 +49,8 @@ function b() {
   console.log(`day 02 b => ${validPasswordCount}`);
 }
 
-a();
-b();
+var runningAsScript = require.main === module
+if (runningAsScript) {
+  a();
+  b();
+}
