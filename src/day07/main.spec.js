@@ -18,32 +18,30 @@ describe("day 07", () => {
       this.bagMap = iterativelyCreateFullBagMap(this.mappedInputs)
     })
     describe("using the test input file", () => {
-
       it("it loads the file", function () {
         const [firstLine] = this.inputs
         expect(firstLine).to.equal('light red bags contain 1 bright white bag, 2 muted yellow bags.')
       });
 
-      it('correctly creates a map the inputs file lines', function () {
-
+      it('correctly creates a map of the input file', function () {
         // A bright white bag, which can hold your shiny gold bag directly.
         expect(this.bagMap['bright white']).to.exist
-        expect(this.bagMap['bright white'][SHINY_GOLD]).to.exist
+        expect(this.bagMap['bright white'].bags[SHINY_GOLD]).to.exist
 
         // A muted yellow bag, which can hold your shiny gold bag directly, plus some other bags.
         expect(this.bagMap['muted yellow']).to.exist
-        expect(this.bagMap['muted yellow'][SHINY_GOLD]).to.exist
+        expect(this.bagMap['muted yellow'].bags[SHINY_GOLD]).to.exist
 
         // A dark orange bag, which can hold bright white and muted yellow bags, either of which could then hold your shiny gold bag.
         expect(this.bagMap['dark orange']).to.exist
-        expect(this.bagMap['dark orange']['bright white']).to.exist
-        expect(this.bagMap['dark orange']['bright white'][SHINY_GOLD]).to.exist
+        expect(this.bagMap['dark orange'].bags['bright white']).to.exist
+        expect(this.bagMap['dark orange'].bags['bright white'].bags[SHINY_GOLD]).to.exist
 
 
         // A light red bag, which can hold bright white and muted yellow bags, either of which could then hold your shiny gold bag.
         expect(this.bagMap['light red']).to.exist
-        expect(this.bagMap['light red']['bright white']).to.exist
-        expect(this.bagMap['light red']['bright white'][SHINY_GOLD]).to.exist
+        expect(this.bagMap['light red'].bags['bright white']).to.exist
+        expect(this.bagMap['light red'].bags['bright white'].bags[SHINY_GOLD]).to.exist
       })
 
       it('should correctly count the number of "shiny gold" bags', function () {

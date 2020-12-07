@@ -21,7 +21,10 @@ function createMappedInputs(bagInputs) {
 
         const bag2 = bagArr.join(" ");
 
-        acc[bag].push(bag2);
+        acc[bag].push({
+          amount,
+          bagType: bag2
+        });
       });
     }
 
@@ -68,13 +71,17 @@ function iterativelyCreateFullBagMap(mappedInputs) {
         const items = mappedInputs[key]
 
         const notInBagMap = !bagMap[key]
-        const allInMap = items.every(i => bagMap[i])
+        const allInMap = items.every(({ bagType }) => bagMap[bagType])
 
         if (allInMap && notInBagMap) {
-          const mapped = items.reduce((acc, i) => {
-            acc[i] = bagMap[i]
+          const mapped = items.reduce((acc, { amount, bagType }) => {
+
+            acc.bags[bagType] = {
+              ...bagMap[bagType],
+              amount: Number(amount)
+            }
             return acc
-          }, {})
+          }, { amount: 1, bags: {} })
 
           bagMap[key] = mapped
           hasModified = true
@@ -90,14 +97,20 @@ function iterativelyCreateFullBagMap(mappedInputs) {
   return bagMap
 }
 
-function countBagsInBag(bagMap) {
-  const keys = Object.keys(bagMap)
+function countBagsInBag(bag) {
+  const { amount, bags } = bag
+
+  const keys = Object.keys(bags)
   if (keys === 0) {
-    return 1
+    return amount
   }
 
-  return keys.reduce((count, bag) => {
-    return count + countBagsInBag(bagMap[bag])
+  return amount * keys.reduce((count, bagType) => {
+    const insideBags = bags[bagType]
+
+    const newCount = countBagsInBag(insideBags)
+
+    return count + insideBags.amount + newCount
   }, 0)
 }
 
@@ -114,7 +127,11 @@ const a = () => {
 };
 
 const b = () => {
-  console.log(`b = ${"?"}`);
+  const mappedInputs = createMappedInputs(inputs);
+  const fullBagMap = iterativelyCreateFullBagMap(mappedInputs);
+  const totalShinyGoldCount = bagsContainedInsideOfBagType(fullBagMap, SHINY_GOLD)
+
+  console.log(`b = ${totalShinyGoldCount}`);
 };
 
 var runningAsScript = require.main === module;
