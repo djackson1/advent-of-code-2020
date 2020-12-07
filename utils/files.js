@@ -22,21 +22,29 @@ const getInputsRaw = (day, filepath = "input.txt") => {
  */
 const getInputs = (
   day,
-  { splitByNewLine = true, splitByComma = false, splitter, filepath } = {}
+  { splitByNewLine = true, splitByComma = false, splitter, filepath, removeLastNewline } = {}
 ) => {
   const inputs = getInputsRaw(day, filepath);
 
-  if (splitter) {
-    return inputs.split(splitter).map((r) => r.trim());
-  } else if (splitByNewLine && splitByComma) {
-    return inputs.split("\n").map((r) => r.trim().split(","));
-  } else if (splitByNewLine) {
-    return inputs.split("\n");
-  } else if (splitByComma) {
-    return inputs.split(",");
+  function getInput() {
+    if (splitter) {
+      return inputs.split(splitter).map((r) => r.trim());
+    } else if (splitByNewLine && splitByComma) {
+      return inputs.split("\n").map((r) => r.trim().split(","));
+    } else if (splitByNewLine) {
+      return inputs.split("\n");
+    } else if (splitByComma) {
+      return inputs.split(",");
+    }
   }
 
-  return inputs;
+  const input = getInput()
+
+  if (removeLastNewline) {
+    return input.filter(r => r)
+  }
+
+  return input;
 };
 
 module.exports = {
