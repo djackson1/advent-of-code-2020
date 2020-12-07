@@ -8,6 +8,8 @@ describe("day 07", () => {
     describe("using the test input file", () => {
       beforeEach(function () {
         this.inputs = getInputs(7, { filepath: 'input.spec.txt' })
+        this.mappedInputs = createMappedInputs(this.inputs);
+        this.bagMap = iterativelyCreateFullBagMap(this.mappedInputs)
       })
 
       it("it loads the file", function () {
@@ -16,9 +18,25 @@ describe("day 07", () => {
       });
 
       it('correctly creates a map the inputs file lines', function () {
-        const mappedInputs = createMappedInputs(this.inputs);
-        const bagMap = iterativelyCreateFullBagMap(mappedInputs)
-        console.log("🚀 ~ file: main.spec.js ~ line 21 ~ bagMap", bagMap)
+
+        // A bright white bag, which can hold your shiny gold bag directly.
+        expect(this.bagMap['bright white']).to.exist
+        expect(this.bagMap['bright white']['shiny gold']).to.exist
+
+        // A muted yellow bag, which can hold your shiny gold bag directly, plus some other bags.
+        expect(this.bagMap['muted yellow']).to.exist
+        expect(this.bagMap['muted yellow']['shiny gold']).to.exist
+
+        // A dark orange bag, which can hold bright white and muted yellow bags, either of which could then hold your shiny gold bag.
+        expect(this.bagMap['dark orange']).to.exist
+        expect(this.bagMap['dark orange']['bright white']).to.exist
+        expect(this.bagMap['dark orange']['bright white']['shiny gold']).to.exist
+
+
+        // A light red bag, which can hold bright white and muted yellow bags, either of which could then hold your shiny gold bag.
+        expect(this.bagMap['light red']).to.exist
+        expect(this.bagMap['light red']['bright white']).to.exist
+        expect(this.bagMap['light red']['bright white']['shiny gold']).to.exist
       })
     });
   });

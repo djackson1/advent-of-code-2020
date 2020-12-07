@@ -9,10 +9,6 @@ function createMappedInputs(bagInputs) {
 
     if (bagsContained !== "no other bags.") {
       const bagsSplit = bagsContained.split(", ");
-      console.log(
-        "🚀 ~ file: main.js ~ line 12 ~ returninputs.reduce ~ bagsSplit",
-        bagsSplit
-      );
 
       bagsSplit.forEach((bagStr) => {
         // console.log("🚀 ~ file: main.js ~ line 16 ~ returninputs.reduce ~ bagStr.replace(/ bag.| bags./g, '')", bagStr.replace(/ bag.| bags./g, ''))
@@ -33,16 +29,30 @@ function createMappedInputs(bagInputs) {
 function iterativelyCreateFullBagMap(mappedInputs) {
   const bagKeys = Object.keys(mappedInputs);
 
-  const bagMap = { ...mappedInputs };
+  const bagMap = {}
 
   let iterating = true;
   while (iterating) {
     let hasModified = false;
 
     bagKeys.forEach((key) => {
-      const item = bagMap[key]
-      console.log("🚀 ~ file: main.js ~ line 45 ~ bagKeys.forEach ~ item", item)
-    });
+      if (!bagMap[key]) {
+        const items = mappedInputs[key]
+
+        const notInBagMap = !bagMap[key]
+        const allInMap = items.every(i => bagMap[i])
+
+        if (allInMap && notInBagMap) {
+          const mapped = items.reduce((acc, i) => {
+            acc[i] = bagMap[i]
+            return acc
+          }, {})
+
+          bagMap[key] = mapped
+          hasModified = true
+        }
+      }
+    })
 
     if (!hasModified) {
       iterating = false;
