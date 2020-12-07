@@ -18,10 +18,10 @@ describe("day 6", () => {
       });
     });
 
-    describe('multiple groups', () => { 
+    describe('multiple groups', () => {
       const groupExamples = [
-        { groups: [["abcx", "abcy", "abcz"], ['a','b']], result: 8 },
-        { groups: [['abc'],['a','b','c'], ['ab','ac'],['a','a','a','a'],['b']], result: 11 }
+        { groups: [["abcx", "abcy", "abcz"], ['a', 'b']], result: 8 },
+        { groups: [['abc'], ['a', 'b', 'c'], ['ab', 'ac'], ['a', 'a', 'a', 'a'], ['b']], result: 11 }
       ]
 
       groupExamples.forEach(({ groups, result }, id) => {
@@ -33,10 +33,10 @@ describe("day 6", () => {
   });
 
   describe("part b examples", () => {
-    describe('multiple groups', () => { 
+    describe('multiple groups', () => {
       const groupExamples = [
-        { groups: [["abcx", "abcy", "abcz"], ['a','b']], result: 3 },
-        { groups: [['abc'],['a','b','c'], ['ab','ac'],['a','a','a','a'],['b']], result: 6 }
+        { groups: [["abcx", "abcy", "abcz"], ['a', 'b']], result: 3 },
+        { groups: [['abc'], ['a', 'b', 'c'], ['ab', 'ac'], ['a', 'a', 'a', 'a'], ['b']], result: 6 }
       ]
 
       groupExamples.forEach(({ groups, result }, id) => {
