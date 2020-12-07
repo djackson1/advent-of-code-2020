@@ -26,6 +26,28 @@ function createMappedInputs(bagInputs) {
   }, {});
 }
 
+function generateOutmostBagMapOfType(bagMap, bagType, outmostBag) {
+  const keys = Object.keys(bagMap)
+
+  if (keys.length === 0) return {}
+
+  return keys.reduce((outmostBagTypes, bag) => {
+    if (bag == bagType) {
+      return { ...outmostBagTypes, [outmostBag]: 1 }
+    }
+
+    return {
+      ...outmostBagTypes,
+      ...generateOutmostBagMapOfType(bagMap[bag], bagType, outmostBag || bag)
+    }
+  }, {})
+}
+
+function countBagTypeInMap(bagMap, bagType) {
+  const bags = generateOutmostBagMapOfType(bagMap, bagType)
+  return Object.keys(bags).length
+}
+
 function iterativelyCreateFullBagMap(mappedInputs) {
   const bagKeys = Object.keys(mappedInputs);
 
@@ -82,5 +104,6 @@ if (runningAsScript) {
 
 module.exports = {
   createMappedInputs,
+  countBagTypeInMap,
   iterativelyCreateFullBagMap
 };

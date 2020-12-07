@@ -1,7 +1,7 @@
 const chai = require("chai");
 const { expect } = chai;
 const { getInputs } = require("../../utils/files");
-const { createMappedInputs, iterativelyCreateFullBagMap } = require('./main')
+const { countBagTypeInMap, createMappedInputs, iterativelyCreateFullBagMap } = require('./main')
 
 describe("day 07", () => {
   describe("part a examples", () => {
@@ -37,6 +37,13 @@ describe("day 07", () => {
         expect(this.bagMap['light red']).to.exist
         expect(this.bagMap['light red']['bright white']).to.exist
         expect(this.bagMap['light red']['bright white']['shiny gold']).to.exist
+      })
+
+      it('should correctly count the number of "shiny gold" bags', function () {
+        const bagWithShinyGoldRemoved = { ...this.bagMap }
+        delete bagWithShinyGoldRemoved['shiny gold']
+
+        expect(countBagTypeInMap(bagWithShinyGoldRemoved, 'shiny gold')).to.equal(4)
       })
     });
   });
