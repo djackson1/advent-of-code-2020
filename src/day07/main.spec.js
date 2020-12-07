@@ -40,10 +40,7 @@ describe("day 07", () => {
       })
 
       it('should correctly count the number of "shiny gold" bags', function () {
-        const bagWithShinyGoldRemoved = { ...this.bagMap }
-        delete bagWithShinyGoldRemoved['shiny gold']
-
-        expect(countBagTypeInMap(bagWithShinyGoldRemoved, 'shiny gold')).to.equal(4)
+        expect(countBagTypeInMap(this.bagMap, 'shiny gold')).to.equal(4)
       })
     });
   });

@@ -1,5 +1,7 @@
 const { getInputs } = require("../../utils/files");
-const inputs = getInputs(7);
+
+// remove final newline... eslint is helping
+const inputs = getInputs(7).filter(r => r);
 
 function createMappedInputs(bagInputs) {
   return bagInputs.reduce((acc, line) => {
@@ -44,7 +46,10 @@ function generateOutmostBagMapOfType(bagMap, bagType, outmostBag) {
 }
 
 function countBagTypeInMap(bagMap, bagType) {
-  const bags = generateOutmostBagMapOfType(bagMap, bagType)
+  const bagsWithoutBagType = { ...bagMap }
+  delete bagsWithoutBagType[bagType]
+
+  const bags = generateOutmostBagMapOfType(bagsWithoutBagType, bagType)
   return Object.keys(bags).length
 }
 
@@ -87,9 +92,9 @@ function iterativelyCreateFullBagMap(mappedInputs) {
 const a = () => {
   const mappedInputs = createMappedInputs(inputs);
   const fullBagMap = iterativelyCreateFullBagMap(mappedInputs);
-  console.log("🚀 ~ file: main.js ~ line 36 ~ a ~ fullBagMap", fullBagMap);
+  const outmostBagsWithShinyGold = countBagTypeInMap(fullBagMap, 'shiny gold')
 
-  console.log(`a = ${"?"}`);
+  console.log(`a = ${outmostBagsWithShinyGold}`);
 };
 
 const b = () => {
