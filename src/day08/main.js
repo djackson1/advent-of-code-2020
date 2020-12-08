@@ -61,6 +61,33 @@ function runInstructions(instructions) {
   }
 }
 
+function findCorruptedInstructionAccValue(instructions) {
+
+  for (let i = 0; i < instructions.length; i++) {
+    const { count, instruction } = instructions[i]
+
+    if ([INSTRUCTIONS.NOP, INSTRUCTIONS.JMP].includes(instruction)) {
+      const before = instructions.slice(0, i)
+      const after = instructions.slice(i + 1)
+
+      const newInstructions = [
+        ...before,
+        ...[{
+          instruction: (instruction === INSTRUCTIONS.NOP ? INSTRUCTIONS.JMP : INSTRUCTIONS.NOP),
+          count
+        }],
+        ...after
+      ]
+
+      const result = runInstructions(newInstructions)
+
+      if (!result.loop) {
+        return result.acc
+      }
+    }
+  }
+}
+
 const a = () => {
   const instructions = convertInputsToInstructions(inputs)
   const { acc } = runInstructions(instructions)
@@ -82,5 +109,6 @@ module.exports = {
   a,
   b,
   convertInputsToInstructions,
-  runInstructions
+  runInstructions,
+  findCorruptedInstructionAccValue
 }

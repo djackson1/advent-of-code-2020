@@ -1,16 +1,16 @@
 const chai = require('chai')
 const { expect } = chai
 const { getInputs } = require("../../utils/files");
-const { convertInputsToInstructions, runInstructions } = require('./main')
+const { convertInputsToInstructions, runInstructions, findCorruptedInstructionAccValue } = require('./main')
 
 describe('day 08', () => {
 
-  describe('part a examples', () => {
-    before(function () {
-      this.inputs = getInputs(8, { filepath: 'input.spec.txt' })
-      this.instructions = convertInputsToInstructions(this.inputs)
-    })
+  before(function () {
+    this.inputs = getInputs(8, { filepath: 'input.spec.txt' })
+    this.instructions = convertInputsToInstructions(this.inputs)
+  })
 
+  describe('part a examples', () => {
     it('should correctly terminate the infinite loop', function () {
       const result = runInstructions(this.instructions)
 
@@ -20,6 +20,8 @@ describe('day 08', () => {
   })
 
   describe('part b examples', () => {
-    // tests
+    it('should find the corrupted instruction and terminate correctly', function () {
+      expect(findCorruptedInstructionAccValue(this.instructions)).to.equal(8)
+    })
   })
 })
