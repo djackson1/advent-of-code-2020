@@ -1,7 +1,7 @@
 const chai = require('chai')
 const { expect } = chai
 const { getInputs } = require("../../utils/files");
-const { convertInputsToInstructions, getAccWhenFirstLooped } = require('./main')
+const { convertInputsToInstructions, runInstructions } = require('./main')
 
 describe('day 08', () => {
 
@@ -12,7 +12,10 @@ describe('day 08', () => {
     })
 
     it('should correctly terminate the infinite loop', function () {
-      expect(getAccWhenFirstLooped(this.instructions)).to.equal(5)
+      const result = runInstructions(this.instructions)
+
+      expect(result.loop).to.be.true
+      expect(result.acc).to.equal(5)
     })
   })
 

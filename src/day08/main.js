@@ -18,15 +18,18 @@ function convertInputsToInstructions(inputs) {
   })
 }
 
-function getAccWhenFirstLooped(instructions) {
+function runInstructions(instructions) {
   let acc = 0
   let head = 0
 
   const instructionsSeenMap = {}
 
-  while (true) {
+  while (instructions[head]) {
     if (instructionsSeenMap[head]) {
-      return acc
+      return {
+        loop: true,
+        acc
+      }
     }
 
     const { instruction, count } = instructions[head]
@@ -51,13 +54,18 @@ function getAccWhenFirstLooped(instructions) {
       }
     }
   }
+
+  return {
+    loop: false,
+    acc
+  }
 }
 
 const a = () => {
   const instructions = convertInputsToInstructions(inputs)
-  const accCount = getAccWhenFirstLooped(instructions)
+  const { acc } = runInstructions(instructions)
 
-  console.log(`a = ${accCount}`)
+  console.log(`a = ${acc}`)
 }
 
 const b = () => {
@@ -74,5 +82,5 @@ module.exports = {
   a,
   b,
   convertInputsToInstructions,
-  getAccWhenFirstLooped
+  runInstructions
 }
