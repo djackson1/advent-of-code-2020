@@ -1,4 +1,5 @@
 const { getInputs } = require('../../utils/files')
+const inputs = getInputs(8)
 
 const INSTRUCTIONS = {
   NOP: 'nop',
@@ -53,7 +54,10 @@ function getAccWhenFirstLooped(instructions) {
 }
 
 const a = () => {
-  console.log(`a = ${'?'}`)
+  const instructions = convertInputsToInstructions(inputs)
+  const accCount = getAccWhenFirstLooped(instructions)
+
+  console.log(`a = ${accCount}`)
 }
 
 const b = () => {
@@ -67,6 +71,8 @@ if (runningAsScript) {
 }
 
 module.exports = {
+  a,
+  b,
   convertInputsToInstructions,
   getAccWhenFirstLooped
 }
