@@ -25,8 +25,28 @@ const b = () => {
   console.log(\`b = \${'?'}\`)
 }
 
-a()
-b()" >> $folder_path/main.js
+var runningAsScript = require.main === module
+if (runningAsScript) {
+  a();
+  b();
+}
+
+module.exports = {}" >> $folder_path/main.js
+
+echo -n > $folder_path/main.spec.js
+echo "const chai = require('chai')
+const { expect } = chai
+// const { ? } = require('./main')
+
+describe('day ${day}', () => {
+  describe('part a examples', () => {
+    // tests
+  })
+
+  describe('part b examples', () => {
+    // tests
+  })
+})" >> $folder_path/main.spec.js
 
 cd $folder_path
 

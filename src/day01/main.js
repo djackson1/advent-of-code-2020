@@ -62,5 +62,8 @@ function b () {
   console.log(`day 01 b => ${value}`)
 }
 
-a()
-b()
+var runningAsScript = require.main === module
+if (runningAsScript) {
+  a();
+  b();
+}

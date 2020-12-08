@@ -43,5 +43,8 @@ const b = () => {
   console.log(`b = ${treeCount}`)
 }
 
-a()
-b()
+var runningAsScript = require.main === module
+if (runningAsScript) {
+  a();
+  b();
+}
