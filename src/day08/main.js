@@ -82,7 +82,7 @@ function findCorruptedInstructionAccValue(instructions) {
       const result = runInstructions(newInstructions)
 
       if (!result.loop) {
-        return result.acc
+        return result
       }
     }
   }
@@ -96,7 +96,10 @@ const a = () => {
 }
 
 const b = () => {
-  console.log(`b = ${'?'}`)
+  const instructions = convertInputsToInstructions(inputs)
+  const { acc } = findCorruptedInstructionAccValue(instructions)
+
+  console.log(`b = ${acc}`)
 }
 
 var runningAsScript = require.main === module

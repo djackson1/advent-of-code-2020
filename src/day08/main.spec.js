@@ -21,7 +21,10 @@ describe('day 08', () => {
 
   describe('part b examples', () => {
     it('should find the corrupted instruction and terminate correctly', function () {
-      expect(findCorruptedInstructionAccValue(this.instructions)).to.equal(8)
+      const result = findCorruptedInstructionAccValue(this.instructions)
+
+      expect(result.loop).to.be.false
+      expect(result.acc).to.equal(8)
     })
   })
 })
