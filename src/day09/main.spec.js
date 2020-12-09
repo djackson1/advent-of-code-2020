@@ -1,7 +1,7 @@
 const chai = require('chai')
 const { expect } = chai
 const { getInputs } = require('../../utils/files')
-const { canTargetBeSummed, findInvalidNumber } = require('./main')
+const { canTargetBeSummed, findEncryptionWeakness, findInvalidNumber } = require('./main')
 
 describe('day 09', () => {
   before(function () {
@@ -13,6 +13,8 @@ describe('day 09', () => {
     const scenarios = [
       { arr: [1, 2, 3, 4], target: 7, isValid: true },
       { arr: [1, 3, 5, 7], target: 7, isValid: false },
+      { arr: [15, 34, 333, 1444], target: 545, isValid: false },
+      { arr: [15, 34, 333, 1444], target: 367, isValid: true },
     ]
 
     scenarios.map(({ arr, target, isValid }, id) => {
@@ -34,6 +36,12 @@ describe('day 09', () => {
   })
 
   describe('part b examples', () => {
-    // tests
+
+    it('shoud find the encryption weakness', function () {
+      const target = 127
+      const weakness = findEncryptionWeakness(this.inputs, target)
+
+      expect(weakness).to.equal(62)
+    })
   })
 })
