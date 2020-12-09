@@ -22,7 +22,7 @@ const getInputsRaw = (day, filepath = "input.txt") => {
  */
 const getInputs = (
   day,
-  { splitByNewLine = true, splitByComma = false, splitter, filepath } = {}
+  { splitByNewLine = true, splitByComma = false, splitter, filepath, fn } = {}
 ) => {
   const inputs = getInputsRaw(day, filepath);
 
@@ -40,11 +40,15 @@ const getInputs = (
 
   const input = getInput()
 
-  if (input[input.length - 1] === '') {
-    return input.slice(0, input.length - 1)
+  const trimmed = (input[input.length - 1] === '')
+    ? input.slice(0, input.length - 1)
+    : input
+
+  if (fn) {
+    return trimmed.map(fn)
   }
 
-  return input;
+  return trimmed;
 };
 
 module.exports = {

@@ -31,7 +31,10 @@ if (runningAsScript) {
   b();
 }
 
-module.exports = {}" >> $folder_path/main.js
+module.exports = {
+  a,
+  b
+}" >> $folder_path/main.js
 
 echo -n > $folder_path/main.spec.js
 echo "const chai = require('chai')
