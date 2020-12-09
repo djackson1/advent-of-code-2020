@@ -22,7 +22,7 @@ const getInputsRaw = (day, filepath = "input.txt") => {
  */
 const getInputs = (
   day,
-  { splitByNewLine = true, splitByComma = false, splitter, filepath, removeLastNewline } = {}
+  { splitByNewLine = true, splitByComma = false, splitter, filepath } = {}
 ) => {
   const inputs = getInputsRaw(day, filepath);
 
@@ -40,8 +40,8 @@ const getInputs = (
 
   const input = getInput()
 
-  if (removeLastNewline) {
-    return input.filter(r => r)
+  if (input[input.length - 1] === '') {
+    return input.slice(0, input.length - 1)
   }
 
   return input;
