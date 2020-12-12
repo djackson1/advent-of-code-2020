@@ -1,7 +1,7 @@
 const chai = require('chai')
 const { expect } = chai
 const { getInputs } = require('../../utils/files')
-const { countOccupiedSeats } = require('./main')
+const { countOccupiedSeats, countOccupiedSeatsUnlimitedLength } = require('./main')
 
 describe('day 11', () => {
   beforeEach(function () {
@@ -13,10 +13,12 @@ describe('day 11', () => {
       const unoccupied = countOccupiedSeats(this.inputs)
       expect(unoccupied).to.equal(37)
     })
-    // tests
   })
 
   describe('part b examples', () => {
-    // tests
+    it('should stabilize and count the occupied seats', function () {
+      const unoccupied = countOccupiedSeatsUnlimitedLength(this.inputs)
+      expect(unoccupied).to.equal(26)
+    })
   })
 })
