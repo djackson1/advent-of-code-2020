@@ -11,6 +11,7 @@ folder_path=../src/day$day
 
 mkdir -p $folder_path;
 touch $folder_path/input.txt
+touch $folder_path/input.spec.txt
 
 touch $folder_path/main.js
 echo -n > $folder_path/main.js
