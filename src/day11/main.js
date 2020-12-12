@@ -149,7 +149,8 @@ const a = () => {
 };
 
 const b = () => {
-  console.log(`b = ${"?"}`);
+  const occupied = countOccupiedSeatsUnlimitedLength(inputs)
+  console.log(`b = ${occupied}`);
 };
 
 var runningAsScript = require.main === module;
