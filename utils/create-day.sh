@@ -39,9 +39,14 @@ module.exports = {
 echo -n > $folder_path/main.spec.js
 echo "const chai = require('chai')
 const { expect } = chai
+const { getInputs } = require('../../utils/files')
 // const { ? } = require('./main')
 
 describe('day ${day}', () => {
+  beforeEach(function () {
+    this.inputs = getInputs(${day}, { filepath: 'input.spec.txt', fn: Number })
+  })
+
   describe('part a examples', () => {
     // tests
   })
