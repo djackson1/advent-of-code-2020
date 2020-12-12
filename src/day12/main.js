@@ -151,7 +151,11 @@ const a = () => {
 };
 
 const b = () => {
-  console.log(`b = ${"?"}`);
+  const instructions = extractInstructions(inputs)
+  const position = moveWaypoint(instructions)
+  const dist = Math.abs(position.x) + Math.abs(position.y)
+
+  console.log(`b = ${dist}`);
 };
 
 var runningAsScript = require.main === module;
