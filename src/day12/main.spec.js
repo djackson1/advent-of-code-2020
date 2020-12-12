@@ -1,7 +1,7 @@
 const chai = require('chai')
 const { expect } = chai
 const { getInputs } = require('../../utils/files')
-const { extractInstructions, moveShip } = require('./main')
+const { extractInstructions, moveShip, moveWaypoint } = require('./main')
 
 describe('day 12', () => {
   beforeEach(function () {
@@ -19,6 +19,11 @@ describe('day 12', () => {
   })
 
   describe('part b examples', () => {
-    // tests
+    it('should correctly move the waypoint', function () {
+      const position = moveWaypoint(this.instructions)
+      const distance = Math.abs(position.x) + Math.abs(position.y)
+
+      expect(distance).to.equal(286)
+    })
   })
 })

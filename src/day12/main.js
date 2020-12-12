@@ -30,11 +30,11 @@ function extractInstructions(inputs) {
   });
 }
 
-function moveShip(inputs) {
+function moveShip(instructions) {
   const position = { x: 0, y: 0 };
   let direction = 0;
 
-  inputs.forEach(({ instruction, value }) => {
+  instructions.forEach(({ instruction, value }) => {
     switch (instruction) {
       case INSTRUCTIONS.NORTH:
         position.y += value;
@@ -77,6 +77,71 @@ function moveShip(inputs) {
   return position
 }
 
+function moveWaypoint (instructions) {
+  const ship = { x: 0, y: 0 }
+  const waypoint = { x: 10, y: 1 }
+
+  instructions.forEach(({ instruction, value }) => {
+    switch (instruction) {
+      case INSTRUCTIONS.NORTH:
+        waypoint.y += value;
+        break;
+
+      case INSTRUCTIONS.SOUTH:
+        waypoint.y -= value;
+        break;
+
+      case INSTRUCTIONS.EAST:
+        waypoint.x += value;
+        break;
+
+      case INSTRUCTIONS.WEST:
+        waypoint.x -= value;
+        break;
+
+      case INSTRUCTIONS.LEFT:
+        const iterationsL = value / 90
+
+        for(let i=0; i<iterationsL; i++) {
+          const newWaypoint = {
+            x: waypoint.y * -1,
+            y: waypoint.x
+          }
+          waypoint.x = newWaypoint.x
+          waypoint.y = newWaypoint.y
+        }
+
+        break;
+
+      case INSTRUCTIONS.RIGHT:
+        const iterationsR = value / 90
+
+        for(let i=0; i<iterationsR; i++) {
+          const newWaypoint = {
+            x: waypoint.y,
+            y: waypoint.x * -1
+          }
+          waypoint.x = newWaypoint.x
+          waypoint.y = newWaypoint.y
+        }
+        break
+
+      case INSTRUCTIONS.FORWARD:
+        const distance = {
+          x: waypoint.x * value,
+          y: waypoint.y * value
+        }
+
+        ship.x += distance.x
+        ship.y += distance.y
+
+        break;
+    }
+  });
+
+  return ship
+}
+
 const a = () => {
   const instructions = extractInstructions(inputs)
   const position = moveShip(instructions)
@@ -100,4 +165,5 @@ module.exports = {
   b,
   extractInstructions,
   moveShip,
+  moveWaypoint,
 };
