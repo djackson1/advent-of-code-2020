@@ -22,7 +22,7 @@ const getInputsRaw = (day, filepath = "input.txt") => {
  */
 const getInputs = (
   day,
-  { splitByNewLine = true, splitByComma = false, splitter = null, filepath = "input.txt", fn = () => {} } = {}
+  { splitByNewLine = true, splitByComma = false, splitter = null, filepath = "input.txt", fn = null } = {}
 ) => {
   const inputs = getInputsRaw(day, filepath);
 
