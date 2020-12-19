@@ -105,8 +105,8 @@ const b = () => {
   console.log(`b = ${validPassportCount}`)
 }
 
-var runningAsScript = require.main === module
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module
+// if (runningAsScript) {
+//   a();
+//   b();
+// }

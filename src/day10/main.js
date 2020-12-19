@@ -1,5 +1,4 @@
 const { getInputs } = require("../../utils/files");
-const inputs = createSortedInputs(getInputs(10, { fn: Number }));
 
 function createSortedInputs(input) {
   return [0, ...input].sort((i, j) => i - j);
@@ -154,22 +153,24 @@ function getArrangementCount(inputs) {
 }
 
 const a = () => {
+  const inputs = createSortedInputs(getInputs(10, { fn: Number }));
   const counts = findAdapterJoltageDifference(inputs);
 
   console.log(`a = ${counts[1] * counts[3]}`);
 };
 
 const b = () => {
+  const inputs = createSortedInputs(getInputs(10, { fn: Number }));
   const permutations = getArrangementCount(inputs)
 
   console.log(`b = ${permutations}`);
 };
 
-var runningAsScript = require.main === module;
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module;
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   a,

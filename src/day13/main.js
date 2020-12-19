@@ -1,5 +1,4 @@
 const { getInputs } = require("../../utils/files");
-const inputs = getInputs(13);
 
 function extractInputs(inputs) {
   const timestamp = Number(inputs[0]);
@@ -74,18 +73,20 @@ function partASolution(inputs) {
 }
 
 const a = () => {
+  const inputs = getInputs(13);
   console.log(`a = ${partASolution(inputs)}`);
 };
 
 const b = () => {
+  const inputs = getInputs(13);
   console.log(`b = ${"?"}`);
 };
 
-var runningAsScript = require.main === module;
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module;
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   a,

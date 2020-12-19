@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node test/runner.js",
-    "start": "ts-node utils/runner.js"
+    "test": "ts-node test/runner.ts",
+    "start": "ts-node utils/runner.ts"
   },
   "author": "",
   "license": "ISC",

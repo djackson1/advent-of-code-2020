@@ -79,11 +79,11 @@ const b = () => {
   console.log(`b = ${uniqueCount}`);
 };
 
-var runningAsScript = require.main === module
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   getUniqueGroupAnswerCount,
