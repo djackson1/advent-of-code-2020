@@ -1,7 +1,7 @@
 const chai = require('chai')
 const { expect } = chai
 const { getInputs } = require('../../utils/files')
-const { partASolution } = require('./main')
+const { partASolution, findSubsequentDepartureTimes } = require('./main')
 
 describe('day 13', () => {
   beforeEach(function () {
@@ -16,6 +16,11 @@ describe('day 13', () => {
   })
 
   describe('part b examples', () => {
-    // tests
+    it('should find the correct timestamp for subsequent bus departures', function () {
+      this.timeout(20000); 
+      const departureTime = findSubsequentDepartureTimes(this.inputs)
+      console.log("🚀 ~ file: main.spec.js ~ line 21 ~ departureTime", departureTime)
+      expect(departureTime).to.equal(1068781)
+    })
   })
 })
