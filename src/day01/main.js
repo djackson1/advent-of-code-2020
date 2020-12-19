@@ -24,7 +24,7 @@ function findSumToAndMultiply(orderedLow, orderedHigh, desiredSum = 2020){
 }
 
 function getOrderedInputs () {
-  const inputs = getInputs(1).map(Number)
+  const inputs = getInputs(1, { fn: Number })
   const orderedHigh = inputs.sort((a, b) => b - a)
   const orderedLow = orderedHigh.reverse()
 
@@ -66,4 +66,12 @@ var runningAsScript = require.main === module
 if (runningAsScript) {
   a();
   b();
+}
+
+module.exports = {
+  a,
+  b,
+  findSumToAndMultiply,
+  getOrderedInputs,
+  find2020In3Inputs
 }

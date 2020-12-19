@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "node test/runner.js",
-    "start": "node utils/runner.js"
+    "start": "ts-node utils/runner.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "chai": "^4.2.0",
     "fs-extra": "^9.0.1",
-    "mocha": "^8.2.1"
+    "mocha": "^8.2.1",
+    "ts-node": "^9.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.14"
   }
 }
