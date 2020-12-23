@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --loader ts-node/esm test/runner.ts",
+    "test": "ts-node test/runner.ts",
     "start": "ts-node utils/runner.ts"
   },
-  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -17,6 +16,7 @@
     "ts-node": "^9.1.1"
   },
   "devDependencies": {
+    "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.14"
   }
 }

@@ -1,4 +1,4 @@
-import { getInputs } from '../../utils/files'
+const { getInputs } = require('../../utils/files')
 
 function findSumToAndMultiply(orderedLow, orderedHigh, desiredSum = 2020){
   for(let i = 0; i < orderedLow.length; i++){
@@ -63,7 +63,7 @@ function b () {
   console.log(`day 01 b => ${value}`)
 }
 
-export default {
+module.exports = {
   a,
   b,
   findSumToAndMultiply,
