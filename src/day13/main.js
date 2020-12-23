@@ -69,24 +69,25 @@ function findDiffsForAllSequences(busIds) {
 function findSubsequentDepartureTimes(inputs) {
   const extractedInputs = extractInputs(inputs);
   const { busIds } = extractedInputs;
+  console.log("busIds", busIds[0])
 
   const diffs = findDiffsForAllSequences(busIds);
-  // console.log(
-  //   "🚀 ~ file: main.js ~ line 75 ~ findSubsequentDepartureTimes ~ diffs",
-  //   diffs
-  // );
 
   const maxDiff = diffs.reduce((max, bus) => {
     if(bus.diff > max.diff) return bus
     return max
   }, { diff: -1})
-  // console.log("🚀 ~ file: main.js ~ line 87 ~ maxDiff ~ maxDiff", maxDiff)
+  console.log("maxDiff", maxDiff)
 
   let {initial, diff} = maxDiff
+
+  // initial = Math.floor(100000000000000 / diff) * diff
   
   const otherBuses = diffs.filter(({busId }) => busId !== maxDiff.busId)
-
+  console.log("otherBuses", otherBuses)
+  
   while(true){
+    // console.log("🚀 ~ file: main.js ~ line 86 ~ findSubsequentDepartureTimes ~ initial", initial)
     const allDivide = otherBuses.every(b => {
       return ((initial + b.idx) %  b.busId)=== 0
     })
@@ -160,7 +161,8 @@ const a = () => {
 
 const b = () => {
   const inputs = getInputs(13);
-  console.log(`b = ${"?"}`);
+  const timestamp = findSubsequentDepartureTimes(inputs)
+  console.log(`b = ${timestamp}`);
 };
 
 // var runningAsScript = require.main === module;

@@ -33,7 +33,7 @@ const getInputs = (
     splitter = null,
     filepath = 'input.txt',
     fn = null
-  }: Options
+  } = {}
 ) => {
   const inputs = getInputsRaw(day, filepath);
 

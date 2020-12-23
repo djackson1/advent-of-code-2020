@@ -18,9 +18,20 @@ describe("day 13", () => {
   describe("part b examples", () => {
     const examples = [
       { input: [0,'17,x,13,19'], result: 3417 },
-      { input: [0, '67,7,59,61'], result: 754018 },
-      { input: [0, '67,x,7,59,61'], result: 779210 },
+
+      // these 3 are very similar
+      { input: [0, '67,7,59,61'], result: 754018 }, // 25192 diff to next
+      { input: [0, '67,x,7,59,61'], result: 779210 }, // 7 * 59 * 61 = 25193... 93??? not 92??
+      { input: [0, '67,x,x,7,59,61'], result: 779210 }, // 25192 diff to next...
+      { input: [0, '67,x,x,x,7,59,61'], result: 779210 }, // same here
+      { input: [0, '67,x,x,x,x,7,59,61'], result: 779210 }, // and here... ??
+      { input: [0, '67,x,x,x,x,x,7,59,61'], result: 779210 },
+      
       { input: [0, '67,7,x,59,61'], result: 1261476 },
+      { input: [0, '67,7,x,x,59,61'], result: 81003 },
+      { input: [0, '67,7,x,x,x,59,61'], result: 588461 },
+      { input: [0, '67,7,x,x,x,x,59,61'], result: 1095919 },
+
       { input: [0, '1789,37,47,1889'], result: 1202161486 },
     ];
 
