@@ -17,12 +17,18 @@ describe("day 13", () => {
 
   describe("part b examples", () => {
     const examples = [
-      { input: "0\n17,x,13,19", result: 3417 },
-      { input: "0\n67,7,59,61", result: 754018 },
-      { input: "0\n67,x,7,59,61", result: 779210 },
-      { input: "0\n67,7,x,59,61", result: 1261476 },
-      { input: "0\n1789,37,47,1889", result: 1202161486 },
+      { input: [0,'17,x,13,19'], result: 3417 },
+      { input: [0, '67,7,59,61'], result: 754018 },
+      { input: [0, '67,x,7,59,61'], result: 779210 },
+      { input: [0, '67,7,x,59,61'], result: 1261476 },
+      { input: [0, '1789,37,47,1889'], result: 1202161486 },
     ];
+
+    // const example = 1
+    // it.only(`scenario ${example}`, function () {
+    //   const timestamp = findSubsequentDepartureTimes(examples[example].input)
+    //   expect(timestamp).to.equal(examples[example].result)
+    // })
 
     examples.forEach(({ input, result }, idx ) => {
       it(`scenario ${idx}`, function () {
@@ -35,10 +41,6 @@ describe("day 13", () => {
     it("should find the correct timestamp for subsequent bus departures", function () {
       this.timeout(20000);
       const departureTime = findSubsequentDepartureTimes(this.inputs);
-      console.log(
-        "🚀 ~ file: main.spec.js ~ line 21 ~ departureTime",
-        departureTime
-      );
       expect(departureTime).to.equal(1068781);
     });
   });
