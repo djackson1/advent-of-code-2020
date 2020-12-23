@@ -1,7 +1,7 @@
 const chai = require("chai");
 const { expect } = chai;
 const { getInputs } = require('../../utils/files')
-const { findSumToAndMultiply, getOrderedInputs } = require("./main");
+const { findSumToAndMultiply, getOrderedInputs, find2020In3Inputs } = require("./main");
 
 describe("day01", () => {
   beforeEach(function () {
@@ -12,7 +12,7 @@ describe("day01", () => {
     this.orderedHigh = orderedHigh
   })
 
-  describe.only("part a examples", () => {
+  describe("part a examples", () => {
     it('should find the product of the 2 numbers that sum to 2020', function () {
       const result = findSumToAndMultiply(this.orderedLow, this.orderedHigh)
 
@@ -21,5 +21,10 @@ describe("day01", () => {
   })
 
   describe("part b examples", () => {
+    it('should find the product of the 3 numbers that sum to 2020', function () {
+      const result = find2020In3Inputs(this.orderedLow, this.orderedHigh)
+
+      expect(result).to.equal(241861950)
+    })
   });
 });

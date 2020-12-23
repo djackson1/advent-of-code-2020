@@ -1,36 +1,48 @@
 const fs = require("fs-extra");
 const path = require("path");
 
-const getDayString = (day) => {
+function getDayString (day: number) : string {
   if (day < 10) return `0${day}`;
   return `${day}`;
 };
 
-const getInputsRaw = (day, filepath = "input.txt") => {
+function getInputsRaw (day: number, filepath: string) : string {
   const dayDir = path.resolve(
     __dirname,
     `../src/day${getDayString(day)}`,
     filepath
   );
+
   return fs.readFileSync(dayDir, "utf-8");
 };
 
-/**
- * @param {string} day
- * @param {boolean} splitByNewLine should the input be split by a newline
- * @param {boolean} splitByComma should the input be split by a comma
- */
+
+type Options = {
+  splitByNewLine: boolean
+  splitByComma: boolean
+  splitter: string
+  filepath: string
+  fn: Function | null
+}
+
 const getInputs = (
-  day,
-  { splitByNewLine = true, splitByComma = false, splitter = null, filepath = "input.txt", fn = null } = {}
+  day: number,
+  {
+    splitByNewLine = true,
+    splitByComma = false,
+    splitter = null,
+    filepath = 'input.txt',
+    fn = null
+  }: Options
 ) => {
   const inputs = getInputsRaw(day, filepath);
 
-  function getInput() {
+  function getInput(): string[] {
     if (splitter) {
       return inputs.split(splitter).map((r) => r.trim());
     } else if (splitByNewLine && splitByComma) {
-      return inputs.split("\n").map((r) => r.trim().split(","));
+      throw new Error("cant return string[][] ????")
+      // return inputs.split("\n").map((r) => r.trim().split(","));
     } else if (splitByNewLine) {
       return inputs.split("\n");
     } else if (splitByComma) {
@@ -45,7 +57,7 @@ const getInputs = (
     : input
 
   if (fn) {
-    return trimmed.map(fn)
+    return trimmed.map(value => fn(value))
   }
 
   return trimmed;
