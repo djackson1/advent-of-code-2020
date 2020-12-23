@@ -1,4 +1,4 @@
-const { getInputs } = require('../../utils/files')
+import { getInputs } from '../../utils/files'
 
 function findSumToAndMultiply(orderedLow, orderedHigh, desiredSum = 2020){
   for(let i = 0; i < orderedLow.length; i++){
@@ -23,8 +23,7 @@ function findSumToAndMultiply(orderedLow, orderedHigh, desiredSum = 2020){
   return -1
 }
 
-function getOrderedInputs () {
-  const inputs = getInputs(1).map(Number)
+function getOrderedInputs (inputs) {
   const orderedHigh = inputs.sort((a, b) => b - a)
   const orderedLow = orderedHigh.reverse()
 
@@ -32,7 +31,8 @@ function getOrderedInputs () {
 }
 
 function a () {
-  const { orderedLow, orderedHigh } = getOrderedInputs()
+  const inputs = getInputs(1, { fn: Number })
+  const { orderedLow, orderedHigh } = getOrderedInputs(inputs)
   const value = findSumToAndMultiply(orderedLow, orderedHigh)
 
   console.log(`day 01 a => ${value}`)
@@ -57,13 +57,16 @@ function find2020In3Inputs (orderedLow, orderedHigh) {
 
 
 function b () {
-  const { orderedLow, orderedHigh } = getOrderedInputs()
+  const inputs = getInputs(1, { fn: Number })
+  const { orderedLow, orderedHigh } = getOrderedInputs(inputs)
   const value = find2020In3Inputs(orderedLow, orderedHigh)
   console.log(`day 01 b => ${value}`)
 }
 
-var runningAsScript = require.main === module
-if (runningAsScript) {
-  a();
-  b();
+export default {
+  a,
+  b,
+  findSumToAndMultiply,
+  getOrderedInputs,
+  find2020In3Inputs
 }

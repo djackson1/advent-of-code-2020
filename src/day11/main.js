@@ -1,5 +1,4 @@
 const { getInputs } = require("../../utils/files");
-const inputs = getInputs(11);
 
 const EMPTY = "L";
 const OCCUPIED = "#";
@@ -144,20 +143,22 @@ function countOccupiedSeats(grid) {
 }
 
 const a = () => {
+  const inputs = getInputs(11);
   const occupied = countOccupiedSeats(inputs);
   console.log(`a = ${occupied}`);
 };
 
 const b = () => {
+  const inputs = getInputs(11);
   const occupied = countOccupiedSeatsUnlimitedLength(inputs)
   console.log(`b = ${occupied}`);
 };
 
-var runningAsScript = require.main === module;
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module;
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   a,

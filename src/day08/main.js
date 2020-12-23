@@ -1,5 +1,4 @@
 const { getInputs } = require('../../utils/files')
-const inputs = getInputs(8)
 
 const INSTRUCTIONS = {
   NOP: 'nop',
@@ -89,6 +88,7 @@ function findCorruptedInstructionAccValue(instructions) {
 }
 
 const a = () => {
+  const inputs = getInputs(8)
   const instructions = convertInputsToInstructions(inputs)
   const { acc } = runInstructions(instructions)
 
@@ -96,17 +96,18 @@ const a = () => {
 }
 
 const b = () => {
+  const inputs = getInputs(8)
   const instructions = convertInputsToInstructions(inputs)
   const { acc } = findCorruptedInstructionAccValue(instructions)
 
   console.log(`b = ${acc}`)
 }
 
-var runningAsScript = require.main === module
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   a,

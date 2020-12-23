@@ -1,6 +1,5 @@
 const { getInputs } = require("../../utils/files");
 
-const inputs = getInputs(7, { removeLastNewline: true })
 
 const SHINY_GOLD = 'shiny gold'
 
@@ -119,6 +118,7 @@ function bagsContainedInsideOfBagType(bagMap, bagType) {
 }
 
 const a = () => {
+  const inputs = getInputs(7, { removeLastNewline: true })
   const mappedInputs = createMappedInputs(inputs);
   const fullBagMap = iterativelyCreateFullBagMap(mappedInputs);
   const outmostBagsWithShinyGold = countBagTypeInMap(fullBagMap, SHINY_GOLD)
@@ -127,6 +127,7 @@ const a = () => {
 };
 
 const b = () => {
+  const inputs = getInputs(7, { removeLastNewline: true })
   const mappedInputs = createMappedInputs(inputs);
   const fullBagMap = iterativelyCreateFullBagMap(mappedInputs);
   const totalShinyGoldCount = bagsContainedInsideOfBagType(fullBagMap, SHINY_GOLD)
@@ -134,11 +135,11 @@ const b = () => {
   console.log(`b = ${totalShinyGoldCount}`);
 };
 
-var runningAsScript = require.main === module;
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module;
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   bagsContainedInsideOfBagType,

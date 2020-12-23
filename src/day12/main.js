@@ -1,5 +1,4 @@
 const { getInputs } = require("../../utils/files");
-const inputs = getInputs(12);
 
 const DIRS = {
   0: { x: 1, y: 0 },
@@ -143,6 +142,7 @@ function moveWaypoint (instructions) {
 }
 
 const a = () => {
+  const inputs = getInputs(12);
   const instructions = extractInstructions(inputs)
   const position = moveShip(instructions)
   const dist = Math.abs(position.x) + Math.abs(position.y)
@@ -151,6 +151,7 @@ const a = () => {
 };
 
 const b = () => {
+  const inputs = getInputs(12);
   const instructions = extractInstructions(inputs)
   const position = moveWaypoint(instructions)
   const dist = Math.abs(position.x) + Math.abs(position.y)
@@ -158,11 +159,11 @@ const b = () => {
   console.log(`b = ${dist}`);
 };
 
-var runningAsScript = require.main === module;
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module;
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   a,

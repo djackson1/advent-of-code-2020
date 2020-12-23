@@ -1,7 +1,7 @@
-const Mocha = require('mocha')
-const fs = require('fs')
-const path = require('path')
-const { argv } = require('yargs')
+import Mocha = require('mocha')
+import fs = require('fs')
+import path = require('path')
+import { argv } from 'yargs'
 
 const timeout = 2000
 
@@ -60,3 +60,7 @@ function run () {
 }
 
 run()
+
+
+
+module.exports = {}

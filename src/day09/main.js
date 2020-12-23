@@ -1,6 +1,5 @@
 
 const { getInputs } = require('../../utils/files')
-const inputs = getInputs(9, { fn: Number })
 
 function canTargetBeSummed(arr, target) {
   for (let i = 0; i < arr.length; i++) {
@@ -54,21 +53,23 @@ function findEncryptionWeakness(input, target) {
 
 const PART_A_ANSWER = 133015568
 const a = () => {
+  const inputs = getInputs(9, { fn: Number })
   const invalidNumber = findInvalidNumber(inputs, 25)
 
   console.log(`a = ${invalidNumber}`)
 }
 
 const b = () => {
+  const inputs = getInputs(9, { fn: Number })
   const encryptionWeakness = findEncryptionWeakness(inputs, PART_A_ANSWER)
   console.log(`b = ${encryptionWeakness}`)
 }
 
-var runningAsScript = require.main === module
-if (runningAsScript) {
-  a();
-  b();
-}
+// var runningAsScript = require.main === module
+// if (runningAsScript) {
+//   a();
+//   b();
+// }
 
 module.exports = {
   a,
