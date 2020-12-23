@@ -41,27 +41,29 @@ function findClosestBusTime(inputs) {
 }
 
 function findSubsequentDepartureTimes(inputs) {
-  const { busIds } = extractInputs(inputs);
+  const extractedInputs = extractInputs(inputs);
+  console.log("🚀 ~ file: main.js ~ line 45 ~ findSubsequentDepartureTimes ~ extractedInputs", extractedInputs)
+  const { busIds } = extractedInputs
 
-  let busTime = 0;
-  while (true) {
-    console.log('1068781', 1068781)
-    console.log('busTime', busTime)
+  // let busTime = 0;
+  // while (true) {
+  //   console.log('1068781', 1068781)
+  //   console.log('busTime', busTime)
 
-    // const canDepartSubsequently = busIds.every(({ busId, idx } ) => {
-    //   if(isNaN(busId)) return true
+  //   // const canDepartSubsequently = busIds.every(({ busId, idx } ) => {
+  //   //   if(isNaN(busId)) return true
       
-    //   return Number.isInteger((busTime + idx) / busId);
-    // });
+  //   //   return Number.isInteger((busTime + idx) / busId);
+  //   // });
 
-    // if (canDepartSubsequently) break;
+  //   // if (canDepartSubsequently) break;
 
-    // busTime += busIds[0].busId;
+  //   // busTime += busIds[0].busId;
 
-    busTime += 59
+  //   busTime += 59
 
-    if(busTime === 1068786) break
-  }
+  //   if(busTime === 1068786) break
+  // }
 
   return busTime 
 }
