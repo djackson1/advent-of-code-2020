@@ -40,7 +40,7 @@ type Instruction = {
   position?: number,
 }
 
-function getInstructions(inputs): Instruction[] {
+export function getInstructions(inputs): Instruction[] {
   return inputs.map((input) => {
     const [type, value] = input.split("=").map((s) => s.trim());
     console.log("🚀 ~ file: main.ts ~ line 46 ~ returninputs.map ~ value", value)
@@ -62,20 +62,22 @@ function getInstructions(inputs): Instruction[] {
   });
 }
 
-function a() {
+export function a() {
   const inputs = getInputs(14);
   const instructions = getInstructions(inputs);
 
   console.log(`a = ${"?"}`);
 }
 
-function b() {
+export function b() {
   const inputs = getInputs(14);
   console.log(`b = ${"?"}`);
 }
 
-module.exports = {
-  a,
-  b,
-  getInstructions,
-};
+// module.exports = {
+//   a,
+//   b,
+//   getInstructions,
+// };
+
+// export {};

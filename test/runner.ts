@@ -49,7 +49,7 @@ function run () {
   const files = walkSync(path.resolve(__dirname, '../src'))
 
   files
-    .filter(file => file.substr(-8) === '.spec.js')
+    .filter(file => file.substr(-8) === '.spec.js' || file.substr(-8) === '.spec.ts')
     .forEach(file => {
       mocha.addFile(file)
     })

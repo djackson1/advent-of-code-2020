@@ -1,7 +1,7 @@
-const chai = require('chai')
+import chai = require('chai')
 const { expect } = chai
-const { getInputs } = require('../../utils/files')
-const { getInstructions } = require('./main')
+import { getInputs } from '../../utils/files'
+import { getInstructions } from './main'
 
 describe('day 14', () => {
   beforeEach(function () {
@@ -22,3 +22,8 @@ describe('day 14', () => {
     // tests
   })
 })
+
+// // "cannot redeclare block scoped variable 'getInputs'" https://stackoverflow.com/a/62912102
+// export {};
+
+export {};
