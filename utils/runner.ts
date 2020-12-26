@@ -14,7 +14,7 @@ const PART_BOTH = 'both';
     return console.error('No part to solve string => "npm run start 1 a"')
   }
   
-  const daySolutions = require(`../src/day${day}/main.js`)
+  const daySolutions = require(`../src/day${day}/main.ts`)
   
   if (part !== PART_BOTH && !daySolutions[part]) {
     return console.error(`Can't run part "${part}" for day "${day}"`)
