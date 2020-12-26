@@ -6,26 +6,30 @@ function updateBit(number, bitPosition, bitValue) {
   return (number & clearMask) | (bitValueNormalized << bitPosition);
 }
 
-function getValueThroughMask (value: number, currentMask: string) : number {
-  
-  return value
+function getValueThroughMask (value: number, currentMasks: MaskValues[]) : number {
+  return currentMasks.reduce((currentNumber, { bitPosition ,bitValue }) => {
+    return updateBit(value, bitPosition, bitValue)
+  }, value)
 }
 
-function runProgram(instructions: Instruction[]): number {
+export function runProgram(instructions: Instruction[]): number {
   const memory = {};
-  let currentMask;
+  let currentMasks;
   
-  instructions.forEach(({ type, position, value }) => {
+  instructions.forEach(({ type, position, value, masks }) => {
     if (type === "mask") {
-      currentMask = value;
+      currentMasks = masks;
     } else if (type === 'mem') {
-      const newValue = getValueThroughMask(value as number, currentMask)
+      const newValue = getValueThroughMask(value as number, currentMasks)
       console.log("🚀 ~ file: main.ts ~ line 23 ~ instructions.forEach ~ newValue", newValue)
+      memory[position] = newValue
     }
   });
   console.log("🚀 ~ file: main.ts ~ line 16 ~ runProgram ~ memory", memory)
 
-  return -1
+  const sum = Object.values(memory).reduce((acc, value) => acc as number + (value as number), 0) as number
+
+  return sum
 }
 
 type MaskValues = {
@@ -35,20 +39,30 @@ type MaskValues = {
 
 type Instruction = {
   type: string,
-  value: number,
-  masks: MaskValues[],
+  value?: number,
+  masks?: MaskValues[],
   position?: number,
 }
 
 export function getInstructions(inputs): Instruction[] {
   return inputs.map((input) => {
     const [type, value] = input.split("=").map((s) => s.trim());
-    console.log("🚀 ~ file: main.ts ~ line 46 ~ returninputs.map ~ value", value)
-
+    
     if (type === "mask") {
+      const masks = value.split('').reverse().reduce((acc, maskValue, idx) => {
+        if(maskValue === 'X') return acc
+
+        acc.push({
+          bitPosition: idx,
+          bitValue: Number(maskValue)
+        })
+
+        return acc
+      }, [])
+
       return {
         type,
-        value,
+        masks
       };
     } else if (type.substr(0, 3) === "mem") {
       const position = Number(type.substr(4, type.length - 5));

@@ -60,7 +60,3 @@ function run () {
 }
 
 run()
-
-
-
-module.exports = {}
