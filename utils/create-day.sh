@@ -16,20 +16,15 @@ touch $folder_path/input.spec.txt
 touch $folder_path/main.js
 echo -n > $folder_path/main.js
 echo "const { getInputs } = require('../../utils/files')
-const inputs = getInputs($1)
 
-const a = () => {
+function a () {
+  const inputs = getInputs($1)
   console.log(\`a = \${'?'}\`)
 }
 
-const b = () => {
+function b () {
+  const inputs = getInputs($1)
   console.log(\`b = \${'?'}\`)
-}
-
-var runningAsScript = require.main === module
-if (runningAsScript) {
-  a();
-  b();
 }
 
 module.exports = {

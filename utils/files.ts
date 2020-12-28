@@ -6,7 +6,7 @@ function getDayString (day: number) : string {
   return `${day}`;
 };
 
-function getInputsRaw (day: number, filepath: string) : string {
+export function getInputsRaw (day: number, filepath: string) : string {
   const dayDir = path.resolve(
     __dirname,
     `../src/day${getDayString(day)}`,
@@ -16,16 +16,15 @@ function getInputsRaw (day: number, filepath: string) : string {
   return fs.readFileSync(dayDir, "utf-8");
 };
 
-
 type Options = {
-  splitByNewLine: boolean
-  splitByComma: boolean
-  splitter: string
-  filepath: string
-  fn: Function | null
+  splitByNewLine?: boolean
+  splitByComma?: boolean
+  splitter?: string
+  filepath?: string
+  fn?: Function | null
 }
 
-const getInputs = (
+export function getInputs(
   day: number,
   {
     splitByNewLine = true,
@@ -33,8 +32,8 @@ const getInputs = (
     splitter = null,
     filepath = 'input.txt',
     fn = null
-  }: Options
-) => {
+  }: Options = {}
+) {
   const inputs = getInputsRaw(day, filepath);
 
   function getInput(): string[] {
@@ -63,7 +62,7 @@ const getInputs = (
   return trimmed;
 };
 
-module.exports = {
-  getInputsRaw,
-  getInputs,
-};
+// module.exports = {
+//   getInputsRaw,
+//   getInputs,
+// };
