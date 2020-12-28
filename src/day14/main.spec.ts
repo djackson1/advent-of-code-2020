@@ -1,7 +1,7 @@
 import chai = require('chai')
 const { expect } = chai
 import { getInputs } from '../../utils/files'
-import { getInstructions, runProgram } from './main'
+import { getInstructions, runProgram,runProgramV2 } from './main'
 
 describe('day 14', () => {
   beforeEach(function () {
@@ -19,7 +19,6 @@ describe('day 14', () => {
       before(function () {
         this.inputs2 = getInputs(14, { filepath: 'input.spec2.txt' })
         this.instructions2 = getInstructions(this.inputs2)
-        console.log("🚀 ~ file: main.spec.ts ~ line 23 ~ this.instructions2", this.instructions2)
       })
 
       it('should overwrite the memory space', function () {
@@ -30,7 +29,18 @@ describe('day 14', () => {
   })
 
   describe('part b examples', () => {
-    // tests
+    beforeEach(function () {
+      this.inputs3 = getInputs(14, { filepath: 'input.spec3.txt' })
+      this.instructions3 = getInstructions(this.inputs3)
+      console.log("🚀 ~ file: main.spec.ts ~ line 36 ~ this.instructions3", this.instructions3)
+    })
+
+    describe('running program v2', () => {
+      it('should correctly return the result', function () {
+        const result = runProgramV2(this.instructions3)
+        expect(result).to.equal(208)
+      })
+    })
   })
 })
 
