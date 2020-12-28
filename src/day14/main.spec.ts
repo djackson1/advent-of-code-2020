@@ -32,7 +32,6 @@ describe('day 14', () => {
     beforeEach(function () {
       this.inputs3 = getInputs(14, { filepath: 'input.spec3.txt' })
       this.instructions3 = getInstructions(this.inputs3)
-      console.log("🚀 ~ file: main.spec.ts ~ line 36 ~ this.instructions3", this.instructions3)
     })
 
     describe('running program v2', () => {
@@ -43,8 +42,3 @@ describe('day 14', () => {
     })
   })
 })
-
-// // "cannot redeclare block scoped variable 'getInputs'" https://stackoverflow.com/a/62912102
-// export {};
-
-export {};

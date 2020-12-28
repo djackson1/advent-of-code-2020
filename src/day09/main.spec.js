@@ -6,7 +6,6 @@ const { canTargetBeSummed, findEncryptionWeakness, findInvalidNumber } = require
 describe('day 09', () => {
   before(function () {
     this.inputs = getInputs(9, { filepath: 'input.spec.txt', fn: Number })
-    console.log("🚀 ~ file: main.spec.js ~ line 9 ~ this.inputs", this.inputs)
   })
 
   describe('can arr be summed to target', () => {

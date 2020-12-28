@@ -1,7 +1,20 @@
 const { getInputs } = require("../../utils/files");
 
-function getBinaryStr(value: number) {
+const Types = {
+  MASK: 'mask',
+  MEM: 'mem'
+}
+
+function getBinaryStrArr(value: number): string[] {
   return [...(value >>> 0).toString(2).padStart(36, "0")];
+}
+
+function binaryStrToInt(binaryStr: string | string[]) {
+  if (Array.isArray(binaryStr)) {
+    return parseInt(binaryStr.join(""), 2);
+  }
+
+  return parseInt(binaryStr, 2);
 }
 
 // JS can only shift up to 2^32 so we have to convert to a string and manipulate
@@ -11,7 +24,7 @@ function getValueThroughMask(
   currentMasks: MaskValues[]
 ): number {
   // turn the integer into a binary string and turn into array of numbers
-  const binStr = getBinaryStr(value); //
+  const binStr = getBinaryStrArr(value);
 
   // for each mask, update the bit position with the value
   currentMasks.forEach(({ bitPosition, bitValue }) => {
@@ -21,77 +34,55 @@ function getValueThroughMask(
   });
 
   // turn the binary digit array back into a number
-  return parseInt(binStr.join(""), 2);
+  return binaryStrToInt(binStr);
 }
-
-type AddressValue = {
-  address: number;
-  value: number;
-};
-
-// '00XX'.split('X')
-// [ '00', '', '' ] - 2^3 = 8 = 000/001/010/011/100/101/110/111
-
-// 00XX
-// =>
-
-// 001X
-// 000X
-// =>
-
-// 0011
-// 0010
-// 0001
-// 0000
 
 function processAddresses(addresses: string[]): string[] {
-  let processing = true;
-  let arr = addresses;
-  while (processing) {
-    processing = false;
-    arr = arr.reduce((acc, str) => {
-      const n = str.indexOf("X");
+  const finalArr = [];
+  const unprocessedArr = [...addresses];
 
-      if (n === -1) {
-        acc.push(str);
-        return acc;
-      }
+  while (unprocessedArr.length > 0) {
+    const address = unprocessedArr.pop();
 
-      processing = true;
+    const xIndex = address.indexOf("X");
 
-      const [strStart, ...strEnd] = str.split("X");
+    if (xIndex === -1) {
+      finalArr.push(address);
+      continue;
+    }
 
-      acc.push(`${strStart}0${strEnd.join("X")}`);
-      acc.push(`${strStart}1${strEnd.join("X")}`);
+    const strStart = address.substring(0, xIndex);
+    const strEnd = address.substring(xIndex + 1);
 
-      return acc;
-    }, []);
+    unprocessedArr.push(`${strStart}0${strEnd}`);
+    unprocessedArr.push(`${strStart}1${strEnd}`);
   }
 
-  return arr
+  return finalArr;
 }
 
-function getAddressesThroughMaskV2(
+function getAddressesThroughMask(
   position: number,
   currentMasks: MaskValues[]
 ): number[] {
-  const posBinStr = getBinaryStr(position);
+  const posStr = getBinaryStrArr(position);
 
-  const posBinStrAltered = currentMasks.reduce(
+  const posStrMasked = currentMasks.reduce(
     (acc, { bitPosition, bitValue }) => {
       const index = 35 - bitPosition;
+      
       if (bitValue === "1" || bitValue === "X") {
         acc[index] = bitValue;
       }
 
       return acc;
     },
-    [...posBinStr]
+    [...posStr]
   );
 
-  const addresses = processAddresses([posBinStrAltered.join("")])
-
-  return addresses.map(str => parseInt(str, 2))
+  const posStrValue = posStrMasked.join('')
+  const addresses = processAddresses([posStrValue]);
+  return addresses.map(binaryStrToInt)
 }
 
 function sumOfMemoryValues(memory: Object): number {
@@ -125,7 +116,8 @@ export function runProgramV2(instructions: Instruction[]): number {
     if (type === "mask") {
       currentMasks = masks;
     } else if (type === "mem") {
-      const addresses = getAddressesThroughMaskV2(position, currentMasks);
+      const addresses = getAddressesThroughMask(position, currentMasks);
+
       addresses.forEach((address) => {
         memory[address] = value;
       });
@@ -147,34 +139,36 @@ type Instruction = {
   position?: number;
 };
 
+function extractMasks(value: string): MaskValues[] {
+  return value
+    .split("")
+    .reverse()
+    .reduce((acc, maskValue, idx) => {
+      acc.push({
+        bitPosition: idx,
+        bitValue: maskValue,
+      });
+
+      return acc;
+    }, []);
+}
+
 export function getInstructions(inputs): Instruction[] {
   return inputs.map((input) => {
     const [type, value] = input.split("=").map((s) => s.trim());
 
-    if (type === "mask") {
-      const masks = value
-        .split("")
-        .reverse()
-        .reduce((acc, maskValue, idx) => {
-          // if(maskValue === 'X') return acc
-
-          acc.push({
-            bitPosition: idx,
-            bitValue: maskValue,
-          });
-
-          return acc;
-        }, []);
+    if (type === Types.MASK) {
+      const masks = extractMasks(value);
 
       return {
         type,
         masks,
       };
-    } else if (type.substr(0, 3) === "mem") {
+    } else if (type.substr(0, 3) === Types.MEM) {
       const position = Number(type.substr(4, type.length - 5));
 
       return {
-        type: "mem",
+        type: Types.MEM,
         position,
         value: Number(value),
       };
