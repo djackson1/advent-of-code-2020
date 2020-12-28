@@ -192,5 +192,8 @@ export function a() {
 
 export function b() {
   const inputs = getInputs(14);
-  console.log(`b = ${"?"}`);
+  const instructions = getInstructions(inputs);
+  const sum = runProgramV2(instructions);
+
+  console.log(`b = ${sum}`);
 }
