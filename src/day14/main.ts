@@ -1,14 +1,17 @@
 const { getInputs } = require("../../utils/files");
 
+// JS can only shift up to 2^32 so we have to convert to a string and manipulate
+// it that way
 function getValueThroughMask (value: number, currentMasks: MaskValues[]) : number {
-  const binStr = [...(value >>> 0).toString(2).padStart(36, '0')]
-  // console.log( binStr.join(''))
+  // turn the integer into a binary string and turn into array of numbers
+  const binStr = [...(value >>> 0).toString(2).padStart(36, '0')].map(Number)
   
+  // for each mask, update the bit position with the value
   currentMasks.forEach(({ bitPosition ,bitValue }) => {
-    binStr[35 - bitPosition] = `${bitValue}`
+    binStr[35 - bitPosition] = bitValue
   }, value)
-  // console.log( binStr.join(''))
 
+  // turn the binary digit array back into a number
   return parseInt(binStr.join(''), 2)
 }
 
@@ -25,7 +28,6 @@ export function runProgram(instructions: Instruction[]): number {
     }
   });
 
-  // console.log("🚀 ~ file: main.ts ~ line 30 ~ runProgram ~ memory", memory)
   const memoryValues = Object.values(memory) as number[]
   const sum = memoryValues.reduce((acc, value) => acc + value, 0)
 
@@ -48,13 +50,9 @@ export function getInstructions(inputs): Instruction[] {
   return inputs.map((input) => {
     const [type, value] = input.split("=").map((s) => s.trim());
     
-    // console.log("🚀 ~ file: main.ts ~ line 53 ~ returninputs.map ~ value", value)
-    // console.log("🚀 ~ file: main.ts ~ line 53 ~ returninputs.map ~ type", type)
     if (type === "mask") {
       const masks = value.split('').reverse().reduce((acc, maskValue, idx) => {
         if(maskValue === 'X') return acc
-        // console.log("🚀 ~ file: main.ts ~ line 56 ~ masks ~ maskValue", maskValue)
-        // console.log("🚀 ~ file: main.ts ~ line 56 ~ masks ~ idx", idx)
 
         acc.push({
           bitPosition: idx,
@@ -92,11 +90,3 @@ export function b() {
   const inputs = getInputs(14);
   console.log(`b = ${"?"}`);
 }
-
-// module.exports = {
-//   a,
-//   b,
-//   getInstructions,
-// };
-
-// export {};
