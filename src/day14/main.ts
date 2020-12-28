@@ -1,15 +1,15 @@
 const { getInputs } = require("../../utils/files");
 
-function updateBit(number, bitPosition, bitValue) {
-  const bitValueNormalized = bitValue ? 1 : 0;
-  const clearMask = ~(1 << bitPosition);
-  return (number & clearMask) | (bitValueNormalized << bitPosition);
-}
-
 function getValueThroughMask (value: number, currentMasks: MaskValues[]) : number {
-  return currentMasks.reduce((currentNumber, { bitPosition ,bitValue }) => {
-    return updateBit(value, bitPosition, bitValue)
+  const binStr = [...(value >>> 0).toString(2).padStart(36, '0')]
+  // console.log( binStr.join(''))
+  
+  currentMasks.forEach(({ bitPosition ,bitValue }) => {
+    binStr[35 - bitPosition] = `${bitValue}`
   }, value)
+  // console.log( binStr.join(''))
+
+  return parseInt(binStr.join(''), 2)
 }
 
 export function runProgram(instructions: Instruction[]): number {
@@ -20,14 +20,14 @@ export function runProgram(instructions: Instruction[]): number {
     if (type === "mask") {
       currentMasks = masks;
     } else if (type === 'mem') {
-      const newValue = getValueThroughMask(value as number, currentMasks)
-      console.log("🚀 ~ file: main.ts ~ line 23 ~ instructions.forEach ~ newValue", newValue)
+      const newValue = getValueThroughMask(value, currentMasks)
       memory[position] = newValue
     }
   });
-  console.log("🚀 ~ file: main.ts ~ line 16 ~ runProgram ~ memory", memory)
 
-  const sum = Object.values(memory).reduce((acc, value) => acc as number + (value as number), 0) as number
+  // console.log("🚀 ~ file: main.ts ~ line 30 ~ runProgram ~ memory", memory)
+  const memoryValues = Object.values(memory) as number[]
+  const sum = memoryValues.reduce((acc, value) => acc + value, 0)
 
   return sum
 }
@@ -48,9 +48,13 @@ export function getInstructions(inputs): Instruction[] {
   return inputs.map((input) => {
     const [type, value] = input.split("=").map((s) => s.trim());
     
+    // console.log("🚀 ~ file: main.ts ~ line 53 ~ returninputs.map ~ value", value)
+    // console.log("🚀 ~ file: main.ts ~ line 53 ~ returninputs.map ~ type", type)
     if (type === "mask") {
       const masks = value.split('').reverse().reduce((acc, maskValue, idx) => {
         if(maskValue === 'X') return acc
+        // console.log("🚀 ~ file: main.ts ~ line 56 ~ masks ~ maskValue", maskValue)
+        // console.log("🚀 ~ file: main.ts ~ line 56 ~ masks ~ idx", idx)
 
         acc.push({
           bitPosition: idx,
@@ -79,8 +83,9 @@ export function getInstructions(inputs): Instruction[] {
 export function a() {
   const inputs = getInputs(14);
   const instructions = getInstructions(inputs);
+  const sum = runProgram(instructions)
 
-  console.log(`a = ${"?"}`);
+  console.log(`a = ${sum}`);
 }
 
 export function b() {
