@@ -4,20 +4,20 @@ export function findNthNumber(
   inputs: number[],
   turnMax: number = 2020
 ): number {
-  console.log("🚀 ~ file: main.ts ~ line 7 ~ turnMax", turnMax)
-  const memory = inputs.reduce((acc, i, idx) => {
-    if (!acc[i]) acc[i] = [];
+  const memory = new Array(turnMax);
+  let turn = 1;
 
-    acc[i].push(idx + 1);
-
-    if (acc[i].length === 3) acc[i].shift();
-
-    return acc;
-  }, {});
+  inputs.forEach((i) => {
+    memory[i] = [turn++];
+  });
 
   let lastNumber = inputs[inputs.length - 1];
-  
+
   for (let turn = inputs.length + 1; turn <= turnMax; turn++) {
+    if(turn %500000 === 0) {
+      console.log("🚀 ~ file: main.ts ~ line 26 ~ memory",turn)
+    }
+
     const firstTimeSpoken = memory[lastNumber];
 
     if (!firstTimeSpoken || firstTimeSpoken.length <= 1) {
@@ -25,28 +25,34 @@ export function findNthNumber(
       if (!memory[0]) {
         memory[0] = [];
       }
-      memory[0].push(turn);
 
-      if (memory[0].length === 3) {
-        memory[0].shift();
+      if (memory[0].length === 0) {
+        memory[0] = [turn];
+      } else if (memory[0].length === 1) {
+        memory[0] = [memory[0][0], turn];
+      } else if (memory[0].length >= 1) {
+        memory[0] = [memory[0][1], turn];
       }
+
       lastNumber = 0;
 
       continue;
     }
 
     // should be?
-    if (firstTimeSpoken.length === 2) {
+    if (firstTimeSpoken.length >= 2) {
       const n = firstTimeSpoken[1] - firstTimeSpoken[0];
 
       if (!memory[n]) {
         memory[n] = [];
       }
 
-      memory[n].push(turn);
-
-      if (memory[n].length === 3) {
-        memory[n].shift();
+      if (memory[n].length === 0) {
+        memory[n] = [turn];
+      } else if (memory[n].length === 1) {
+        memory[n] = [memory[n][0], turn];
+      } else if (memory[n].length >= 1) {
+        memory[n] = [memory[n][1], turn];
       }
 
       lastNumber = n;
@@ -62,13 +68,16 @@ export function findNthNumber(
 
 export function a() {
   const inputs = getInputs(15);
-  const arr = inputs[0].split(',').map(Number)
-  const result = findNthNumber(arr)
+  const arr = inputs[0].split(",").map(Number);
+  const result = findNthNumber(arr);
 
   console.log(`a = ${result}`);
 }
 
 export function b() {
   const inputs = getInputs(15);
-  console.log(`b = ${"?"}`);
+  const arr = inputs[0].split(",").map(Number);
+  const result = findNthNumber(arr, 30000000);
+
+  console.log(`b = ${result}`);
 }
