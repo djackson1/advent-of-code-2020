@@ -13,30 +13,25 @@ mkdir -p $folder_path;
 touch $folder_path/input.txt
 touch $folder_path/input.spec.txt
 
-touch $folder_path/main.js
-echo -n > $folder_path/main.js
+touch $folder_path/main.ts
+echo -n > $folder_path/main.ts
 echo "const { getInputs } = require('../../utils/files')
 
-function a () {
-  const inputs = getInputs($1)
-  console.log(\`a = \${'?'}\`)
+export function a () {
+  const inputs = getInputs(15)
+  console.log(`a = ${'?'}`)
 }
 
-function b () {
-  const inputs = getInputs($1)
-  console.log(\`b = \${'?'}\`)
-}
+export function b () {
+  const inputs = getInputs(15)
+  console.log(`b = ${'?'}`)
+}" >> $folder_path/main.ts
 
-module.exports = {
-  a,
-  b
-}" >> $folder_path/main.js
-
-echo -n > $folder_path/main.spec.js
-echo "const chai = require('chai')
+echo -n > $folder_path/main.spec.ts
+echo "import chai = require('chai')
 const { expect } = chai
-const { getInputs } = require('../../utils/files')
-// const { ? } = require('./main')
+import { getInputs } from '../../utils/files'
+// import { ? } from './main'
 
 describe('day ${day}', () => {
   beforeEach(function () {
@@ -50,7 +45,7 @@ describe('day ${day}', () => {
   describe('part b examples', () => {
     // tests
   })
-})" >> $folder_path/main.spec.js
+})" >> $folder_path/main.spec.ts
 
 cd $folder_path
 
