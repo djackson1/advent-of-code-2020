@@ -62,7 +62,10 @@ export function findNthNumber(
 
 export function a() {
   const inputs = getInputs(15);
-  console.log(`a = ${"?"}`);
+  const arr = inputs[0].split(',').map(Number)
+  const result = findNthNumber(arr)
+
+  console.log(`a = ${result}`);
 }
 
 export function b() {
