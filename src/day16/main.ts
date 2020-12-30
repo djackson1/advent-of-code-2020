@@ -21,20 +21,20 @@ class Info {
 }
 
 function findInvalidValues(mappedValues: Object, otherTickets: number[][]): number[] {
-  const unqiueInvalidValues = otherTickets.reduce((acc, ticketValues) => {
+  const count = otherTickets.reduce((acc, ticketValues) => {
     ticketValues.forEach(val => {
       if(!mappedValues[val]) {
-        acc[val] = true
+        acc.push(val)
       }
     })
     return acc
-  }, {})
-
-  return Object.keys(unqiueInvalidValues).map(Number)
+  }, [])
+  return count
 }
 
 export function getInvalidCount (mappedValues: Object, otherTickets: number[][]): number {
   const invalidValues = findInvalidValues(mappedValues, otherTickets)
+  console.log("🚀 ~ file: main.ts ~ line 38 ~ getInvalidCount ~ invalidValues", invalidValues)
   const count = invalidValues.reduce((acc, val) => acc + val, 0)
   return count
 }
@@ -101,8 +101,10 @@ export function extractNoteInfo(inputs: string[]): Info {
 export function a(): void {
   const inputs = getInputs(16);
   const info = extractNoteInfo(inputs);
+  const mappedValues = createMappedValues(info.fields);
+  const invalidCount = getInvalidCount(mappedValues, info.otherTickets)
 
-  console.log(`a = ${"?"}`);
+  console.log(`a = ${invalidCount}`);
 }
 
 export function b(): void {
