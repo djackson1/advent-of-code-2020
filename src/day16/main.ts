@@ -6,51 +6,82 @@ const TicketSegments = {
   OTHER_TICKETS: 3,
 };
 
-class FieldType {
+type FieldType = {
   field: string;
   min1: number;
   max1: number;
   min2: number;
   max2: number;
-}
+};
 
-class Info {
+type Info = {
   fields: FieldType[];
   ticket: number[];
   otherTickets: number[][];
-}
+};
 
-function findInvalidValues(mappedValues: Object, otherTickets: number[][]): number[] {
+type Tickets = {
+  valid: FieldType[];
+  invalid: FieldType[];
+};
+
+function findInvalidValues(
+  mappedValues: Object,
+  otherTickets: number[][]
+): number[] {
   const count = otherTickets.reduce((acc, ticketValues) => {
-    ticketValues.forEach(val => {
-      if(!mappedValues[val]) {
-        acc.push(val)
+    ticketValues.forEach((val) => {
+      if (!mappedValues[val]) {
+        acc.push(val);
       }
-    })
-    return acc
-  }, [])
-  return count
+    });
+    return acc;
+  }, []);
+  return count;
 }
 
-export function getInvalidCount (mappedValues: Object, otherTickets: number[][]): number {
-  const invalidValues = findInvalidValues(mappedValues, otherTickets)
-  console.log("🚀 ~ file: main.ts ~ line 38 ~ getInvalidCount ~ invalidValues", invalidValues)
-  const count = invalidValues.reduce((acc, val) => acc + val, 0)
-  return count
+export function splitTicketsIntoValidAndNonValid(
+  mappedValues: Object,
+  otherTickets: number[][]
+): Tickets {
+  return otherTickets.reduce(
+    (acc, ticketValues) => {
+      const anyInvalid = ticketValues.some((val) => {
+        return !mappedValues[val];
+      });
+
+      if (anyInvalid) {
+        acc.invalid.push(ticketValues);
+      } else {
+        acc.valid.push(ticketValues);
+      }
+
+      return acc;
+    },
+    { valid: [], invalid: [] }
+  );
 }
 
-export function createMappedValues (fields: FieldType[]): Object {
+export function getInvalidCount(
+  mappedValues: Object,
+  otherTickets: number[][]
+): number {
+  const invalidValues = findInvalidValues(mappedValues, otherTickets);
+  const count = invalidValues.reduce((acc, val) => acc + val, 0);
+  return count;
+}
+
+export function createMappedValues(fields: FieldType[]): Object {
   return fields.reduce((acc, { min1, max1, min2, max2 }) => {
-
-    for(let i = min1; i<=max1; i++ ){
-      acc[i] = true
+    for (let i = min1; i <= max1; i++) {
+      acc[i] = true;
     }
-    for(let i = min2; i<=max2; i++ ){
-      acc[i] = true
+    for (let i = min2; i <= max2; i++) {
+      acc[i] = true;
     }
 
-    return acc
-  }, {})
+    return acc;
+  }, {});
 }
 
 function splitTicketValues(ticket: string): number[] {
@@ -102,7 +133,7 @@ export function a(): void {
   const inputs = getInputs(16);
   const info = extractNoteInfo(inputs);
   const mappedValues = createMappedValues(info.fields);
-  const invalidCount = getInvalidCount(mappedValues, info.otherTickets)
+  const invalidCount = getInvalidCount(mappedValues, info.otherTickets);
 
   console.log(`a = ${invalidCount}`);
 }

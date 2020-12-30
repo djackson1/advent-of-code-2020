@@ -1,7 +1,12 @@
 import chai = require("chai");
 const { expect } = chai;
 import { getInputs } from "../../utils/files";
-import { createMappedValues, extractNoteInfo, getInvalidCount } from "./main";
+import {
+  createMappedValues,
+  extractNoteInfo,
+  getInvalidCount,
+  splitTicketsIntoValidAndNonValid,
+} from "./main";
 
 describe("day 16", () => {
   beforeEach(function () {
@@ -44,13 +49,35 @@ describe("day 16", () => {
     });
 
     it("should find all the invalid values", function () {
-      const invalidCount = getInvalidCount(this.mappedValues, this.info.otherTickets)
+      const invalidCount = getInvalidCount(
+        this.mappedValues,
+        this.info.otherTickets
+      );
 
-      expect(invalidCount).to.equal(71)
+      expect(invalidCount).to.equal(71);
     });
   });
 
   describe("part b examples", () => {
     // tests
+    beforeEach(function () {
+      this.inputs2 = getInputs(16, { filepath: "input2.spec.txt" });
+      this.info2 = extractNoteInfo(this.inputs2);
+      this.mappedValues2 = createMappedValues(this.info2.fields);
+    });
+
+    it("should split valid and non valid rows", function () {
+      const { valid, invalid } = splitTicketsIntoValidAndNonValid(
+        this.mappedValues2,
+        this.info2.otherTickets
+      );
+
+      expect(valid).to.deep.equal([
+        [3, 9, 18],
+        [15, 1, 5],
+        [5, 14, 9],
+      ]);
+      expect(invalid).to.deep.equal([[20, 14, 9]]);
+    });
   });
 });
