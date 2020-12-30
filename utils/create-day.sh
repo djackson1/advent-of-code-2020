@@ -19,12 +19,12 @@ echo "const { getInputs } = require('../../utils/files')
 
 export function a () {
   const inputs = getInputs(15)
-  console.log(`a = ${'?'}`)
+  console.log(\`a = \${'?'}\`)
 }
 
 export function b () {
   const inputs = getInputs(15)
-  console.log(`b = ${'?'}`)
+  console.log(\`b = \${'?'}\`)
 }" >> $folder_path/main.ts
 
 echo -n > $folder_path/main.spec.ts
