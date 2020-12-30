@@ -184,7 +184,7 @@ export function extractNoteInfo(inputs: string[]): Info {
     }
 
     if (curSegment === TicketSegments.FIELDS) {
-      const [fieldName, ...values] = input.split(/:|or|-/).map((s) => s.trim());
+      const [fieldName, ...values] = input.split(/:|or |-/).map((s) => s.trim());
 
       const [min1, max1, min2, max2] = values.map(Number);
 
@@ -216,5 +216,23 @@ export function a(): void {
 
 export function b(): void {
   const inputs = getInputs(16);
-  console.log(`a = ${"?"}`);
+  const info = extractNoteInfo(inputs);
+  console.log("🚀 ~ file: main.ts ~ line 225 ~ b ~ info", info)
+  const mappedValues = createMappedValues(info.fields);
+  const { valid: validTickets } = splitTicketsIntoValidAndNonValid(
+    mappedValues,
+    info.otherTickets
+  );
+  const fieldOrder = findCorrectFieldOrder(info.fields, validTickets)
+  const ticketMapped = mapTicketToFieldOrder(info.ticket, fieldOrder, info.fields)
+  console.log("🚀 ~ file: main.ts ~ line 227 ~ b ~ ticketMapped", ticketMapped)
+
+  const departureKeys = fieldOrder.filter(f => f.substr(0, 9) === 'departure')
+  console.log("🚀 ~ file: main.ts ~ line 231 ~ b ~ departureKeys", departureKeys)
+
+  const departureSum = departureKeys.reduce((acc, fieldName) => {
+    return acc * ticketMapped[fieldName]
+  }, 1)
+
+  console.log(`a = ${departureSum}`);
 }
