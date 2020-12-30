@@ -17,12 +17,12 @@ touch $folder_path/main.ts
 echo -n > $folder_path/main.ts
 echo "const { getInputs } = require('../../utils/files')
 
-export function a () {
+export function a (): void {
   const inputs = getInputs(15)
   console.log(\`a = \${'?'}\`)
 }
 
-export function b () {
+export function b (): void {
   const inputs = getInputs(15)
   console.log(\`b = \${'?'}\`)
 }" >> $folder_path/main.ts
