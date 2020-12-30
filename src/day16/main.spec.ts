@@ -6,6 +6,7 @@ import {
   extractNoteInfo,
   getInvalidCount,
   findCorrectFieldOrder,
+  mapTicketToFieldOrder,
   splitTicketsIntoValidAndNonValid,
 } from "./main";
 
@@ -89,6 +90,21 @@ describe("day 16", () => {
 
       const fieldOrder = findCorrectFieldOrder(this.info2.fields, validTickets)
       expect(fieldOrder).to.deep.equal(['row', 'class', 'seat'])
+    })
+
+    it("should map the ticket to the correct field order", function () {
+      const { valid: validTickets } = splitTicketsIntoValidAndNonValid(
+        this.mappedValues2,
+        this.info2.otherTickets
+      );
+
+      const fieldOrder = findCorrectFieldOrder(this.info2.fields, validTickets)
+
+      const ticketMapped = mapTicketToFieldOrder(this.info2.ticket, fieldOrder, this.info2.fields)
+
+      expect(ticketMapped['class']).to.equal(12)
+      expect(ticketMapped['row']).to.equal(11)
+      expect(ticketMapped['seat']).to.equal(13)
     })
   });
 });

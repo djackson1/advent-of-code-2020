@@ -34,6 +34,14 @@ function isFieldValueValid(field: FieldType, value: number): boolean {
   return false
 }
 
+export function mapTicketToFieldOrder(ticket: number[], fieldOrder: string[], fields: FieldType[]): Object {
+  const arr = {}
+  for(let i = 0; i < ticket.length; i++) {
+    arr[fieldOrder[i]] = ticket[i]
+  }
+  return arr
+}
+
 export function findCorrectFieldOrder(
   fields: FieldType[],
   tickets: number[][]
