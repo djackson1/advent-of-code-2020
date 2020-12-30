@@ -5,6 +5,7 @@ import {
   createMappedValues,
   extractNoteInfo,
   getInvalidCount,
+  findCorrectFieldOrder,
   splitTicketsIntoValidAndNonValid,
 } from "./main";
 
@@ -18,9 +19,9 @@ describe("day 16", () => {
   describe("part a examples", () => {
     it("extracts field information", function () {
       const fields = [
-        { field: "class", min1: 1, max1: 3, min2: 5, max2: 7 },
-        { field: "row", min1: 6, max1: 11, min2: 33, max2: 44 },
-        { field: "seat", min1: 13, max1: 40, min2: 45, max2: 50 },
+        { fieldName: "class", min1: 1, max1: 3, min2: 5, max2: 7 },
+        { fieldName: "row", min1: 6, max1: 11, min2: 33, max2: 44 },
+        { fieldName: "seat", min1: 13, max1: 40, min2: 45, max2: 50 },
       ];
       expect(this.info.fields).to.deep.equal(fields);
 
@@ -79,5 +80,15 @@ describe("day 16", () => {
       ]);
       expect(invalid).to.deep.equal([[20, 14, 9]]);
     });
+
+    it('should find the correct field order', function () {
+      const { valid: validTickets } = splitTicketsIntoValidAndNonValid(
+        this.mappedValues2,
+        this.info2.otherTickets
+      );
+
+      const fieldOrder = findCorrectFieldOrder(this.info2.fields, validTickets)
+      expect(fieldOrder).to.deep.equal(['row', 'class', 'seat'])
+    })
   });
 });

@@ -7,7 +7,7 @@ const TicketSegments = {
 };
 
 type FieldType = {
-  field: string;
+  fieldName: string;
   min1: number;
   max1: number;
   min2: number;
@@ -21,9 +21,77 @@ type Info = {
 };
 
 type Tickets = {
-  valid: FieldType[];
-  invalid: FieldType[];
+  valid: number[][];
+  invalid: number[][];
 };
+
+function isFieldValueValid(field: FieldType, value: number): boolean {
+  const { min1, max1, min2, max2 } = field
+
+  if(value >= min1 && value <= max1) return true
+  if(value >= min2 && value <= max2) return true
+
+  return false
+}
+
+export function findCorrectFieldOrder(
+  fields: FieldType[],
+  tickets: number[][]
+): string[] {
+  const indexes = [...Array(fields.length).keys()]
+  
+  const fieldNames = fields.reduce((acc, { fieldName }) => {
+    acc[fieldName] = true
+    return acc
+  }, {})
+
+  const fieldCandidates = indexes.reduce((acc, idx) => {
+    acc[idx] = { ...fieldNames }
+    return acc
+  }, {})
+  
+  tickets.forEach(ticket => {
+    ticket.forEach((val, idx) => {
+      fields.forEach((field) => {
+        const { fieldName } = field
+        const valid = isFieldValueValid(field, val)
+        
+        if(!valid) {
+          if(fieldCandidates[idx][fieldName])
+          delete fieldCandidates[idx][fieldName]
+        }
+      })
+    })
+  })
+  
+  const knownPositions = {}
+  
+  while(true) {
+    indexes.forEach(index => {
+      if(fieldCandidates[index]) {
+        const candidates = fieldCandidates[index]
+
+        const fields = Object.keys(candidates)
+
+        if(fields.length === 1) {
+          
+          knownPositions[index] = fields[0]
+          
+          indexes.forEach(index2 => {
+            if(fieldCandidates[index2][fields[0]]) {
+              delete fieldCandidates[index2][fields[0]]
+            }
+          })
+          
+        }
+      }
+    })
+    
+    if(Object.keys(knownPositions).length === indexes.length) break
+  }
+
+  return Object.values(knownPositions)
+}
 
 function findInvalidValues(
   mappedValues: Object,
@@ -108,12 +176,12 @@ export function extractNoteInfo(inputs: string[]): Info {
     }
 
     if (curSegment === TicketSegments.FIELDS) {
-      const [field, ...values] = input.split(/:|or|-/).map((s) => s.trim());
+      const [fieldName, ...values] = input.split(/:|or|-/).map((s) => s.trim());
 
       const [min1, max1, min2, max2] = values.map(Number);
 
       info.fields.push({
-        field,
+        fieldName,
         min1,
         max1,
         min2,
