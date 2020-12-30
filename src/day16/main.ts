@@ -20,6 +20,25 @@ class Info {
   otherTickets: number[][];
 }
 
+function findInvalidValues(mappedValues: Object, otherTickets: number[][]): number[] {
+  const unqiueInvalidValues = otherTickets.reduce((acc, ticketValues) => {
+    ticketValues.forEach(val => {
+      if(!mappedValues[val]) {
+        acc[val] = true
+      }
+    })
+    return acc
+  }, {})
+
+  return Object.keys(unqiueInvalidValues).map(Number)
+}
+
+export function getInvalidCount (mappedValues: Object, otherTickets: number[][]): number {
+  const invalidValues = findInvalidValues(mappedValues, otherTickets)
+  const count = invalidValues.reduce((acc, val) => acc + val, 0)
+  return count
+}
+
 export function createMappedValues (fields: FieldType[]): Object {
   return fields.reduce((acc, { min1, max1, min2, max2 }) => {
 
