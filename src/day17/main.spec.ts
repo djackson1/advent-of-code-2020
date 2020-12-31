@@ -50,8 +50,8 @@ describe("day 17", () => {
 ...#.
 ..#..`);
 
-const gridStr2 = getGridStr(nextGrid, 0);
-expect(gridStr2).to.equal(`.....
+      const gridStr2 = getGridStr(nextGrid, 0);
+      expect(gridStr2).to.equal(`.....
 .....
 .#.#.
 ..##.

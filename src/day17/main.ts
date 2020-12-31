@@ -65,29 +65,32 @@ export function getGridStr(grid: Grid, z: number) {
   return str;
 }
 
-export function getGridActiveCount (grid: Grid) : number {
-  const { cells, sizing: { minX, minY, minZ, maxX, maxY, maxZ}} = grid
+export function getGridActiveCount(grid: Grid): number {
+  const {
+    cells,
+    sizing: { minX, minY, minZ, maxX, maxY, maxZ },
+  } = grid;
 
-  let count = 0
+  let count = 0;
 
   for (let z = minZ; z <= maxZ; z++) {
     for (let y = minY; y <= maxY; y++) {
       for (let x = minX; x <= maxX; x++) {
-        const cell = getGridCell(cells, { x,y,z })
+        const cell = getGridCell(cells, { x, y, z });
 
-        if(cell === ACTIVE) {
-          count += 1
+        if (cell === ACTIVE) {
+          count += 1;
         }
       }
     }
   }
 
-  return count
+  return count;
 }
 
 function getNextCellState(cells: Object, position: Position): string {
   const cur = getGridCell(cells, position);
-  
+
   const activeCount = DIRS.reduce((acc, dir) => {
     const pos = {
       x: position.x + dir.x,
@@ -95,12 +98,12 @@ function getNextCellState(cells: Object, position: Position): string {
       z: position.z + dir.z,
     };
     const nextCell = getGridCell(cells, pos);
-    
+
     if (nextCell === ACTIVE) return acc + 1;
-    
+
     return acc;
   }, 0);
-  
+
   if (cur === ACTIVE) {
     if (activeCount === 2 || activeCount === 3) {
       return ACTIVE;
@@ -168,11 +171,19 @@ export function createGrid(inputs: string[]): Grid {
 }
 
 export function a(): void {
-  const inputs = getInputs(15);
-  console.log(`a = ${"?"}`);
+  const inputs = getInputs(17);
+  let grid = createGrid(inputs);
+
+  for (let i = 0; i < 6; i++) {
+    grid = cycleGrid(grid);
+  }
+
+  const count = getGridActiveCount(grid);
+
+  console.log(`a = ${count}`);
 }
 
 export function b(): void {
-  const inputs = getInputs(15);
+  const inputs = getInputs(17);
   console.log(`b = ${"?"}`);
 }
