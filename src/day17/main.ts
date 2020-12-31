@@ -1,4 +1,4 @@
-const { get, setWith } = require("lodash/fp");
+const { setWith } = require("lodash/fp");
 const { getInputs } = require("../../utils/files");
 
 const ACTIVE = "#";
@@ -27,29 +27,37 @@ type Position = {
   w: number;
 };
 
-function createDirs(minW = 0, maxW = 0): Position[] {
+function createDirectionVectors(minW, maxW): Position[] {
   const dirs = [];
   for (let w = minW; w <= maxW; w++) {
-  for (let z = -1; z <= 1; z++) {
-    for (let y = -1; y <= 1; y++) {
-      for (let x = -1; x <= 1; x++) {
-        if (!(x === 0 && y === 0 && z === 0 && w === 0)) {
-          dirs.push({ w,x, y, z });
+    for (let z = -1; z <= 1; z++) {
+      for (let y = -1; y <= 1; y++) {
+        for (let x = -1; x <= 1; x++) {
+          if (!(x === 0 && y === 0 && z === 0 && w === 0)) {
+            dirs.push({ w, x, y, z });
+          }
         }
       }
-    }
     }
   }
   return dirs;
 }
-const DIRS_3D = createDirs();
-const DIRS_4D = createDirs(-1, 1);
+const DIRS_3D = createDirectionVectors(0, 0); // W is always 0 in 3D
+const DIRS_4D = createDirectionVectors(-1, 1); // get the W directions for 4D
 
 function getGridCell(cells: Object, position: Position): string {
   const { w, x, y, z } = position;
-  return get(`[${w}][${z}][${y}][${x}]`, cells) || INACTIVE;
+
+  // much quicker than lodash get... =/
+  if (!cells[w]) return INACTIVE;
+  if (!cells[w][z]) return INACTIVE;
+  if (!cells[w][z][y]) return INACTIVE;
+  if (!cells[w][z][y][x]) return INACTIVE;
+
+  return cells[w][z][y][x];
 }
 
+// kind of useless, but nice to print out the grid
 export function getGridStr(grid: Grid, z: number) {
   const {
     sizing: { minX, maxX, minY, maxY },
@@ -96,7 +104,11 @@ export function getGridActiveCount(grid: Grid): number {
   return count;
 }
 
-function getNextCellState(cells: Object, position: Position, directions: Position[]): string {
+function getNextCellState(
+  cells: Object,
+  position: Position,
+  directions: Position[]
+): string {
   const cur = getGridCell(cells, position);
 
   const activeCount = directions.reduce((acc, dir) => {
@@ -129,30 +141,37 @@ function getNextCellState(cells: Object, position: Position, directions: Positio
 }
 
 function getNextCellState3D(cells: Object, position: Position): string {
-  return getNextCellState(cells, position, DIRS_3D)
+  return getNextCellState(cells, position, DIRS_3D);
 }
 function getNextCellState4D(cells: Object, position: Position): string {
-  return getNextCellState(cells, position, DIRS_4D)
+  return getNextCellState(cells, position, DIRS_4D);
 }
 
 function cycleGrid(grid: Grid, nextCellStateFn: Function): Grid {
-  let minW = 99999999;
-  let minX = 99999999;
-  let minY = 99999999;
-  let minZ = 99999999;
-  let maxW = -99999999;
-  let maxX = -99999999;
-  let maxY = -99999999;
-  let maxZ = -99999999;
-  let cells = {};
+  let minW = 999;
+  let minX = 999;
+  let minY = 999;
+  let minZ = 999;
+  let maxW = -999;
+  let maxX = -999;
+  let maxY = -999;
+  let maxZ = -999;
+  const cells = {};
 
-  for (let z = grid.sizing.minZ - 1; z <= grid.sizing.maxZ + 1; z++) {
-    for (let y = grid.sizing.minY - 1; y <= grid.sizing.maxY + 1; y++) {
-      for (let x = grid.sizing.minX - 1; x <= grid.sizing.maxX + 1; x++) {
-        for (let w = grid.sizing.minW - 1; w <= grid.sizing.maxW + 1; w++) {
+  for (let w = grid.sizing.minW - 1; w <= grid.sizing.maxW + 1; w++) {
+    for (let z = grid.sizing.minZ - 1; z <= grid.sizing.maxZ + 1; z++) {
+      for (let y = grid.sizing.minY - 1; y <= grid.sizing.maxY + 1; y++) {
+        for (let x = grid.sizing.minX - 1; x <= grid.sizing.maxX + 1; x++) {
           const nextCell = nextCellStateFn(grid.cells, { w, x, y, z });
-          cells = setWith(Object, `[${w}][${z}][${y}][${x}]`, nextCell, cells);
 
+          // much quicker than lodash setWith again =/
+          if (!cells[w]) cells[w] = {};
+          if (!cells[w][z]) cells[w][z] = {};
+          if (!cells[w][z][y]) cells[w][z][y] = {};
+
+          cells[w][z][y][x] = nextCell;
+
+          // update bounds so we don't process more than we need to
           if (nextCell === ACTIVE) {
             if (w < minW) minW = w;
             if (x < minX) minX = x;
@@ -183,8 +202,11 @@ export function cycleGrid4D(grid: Grid): Grid {
   return cycleGrid(grid, getNextCellState4D);
 }
 
-export function runGridNTimes(grid: Grid, count: number, cycleFn: Function) {
-  console.log("🚀 ~ file: main.ts ~ line 187 ~ runGridNTimes ~ count", count)
+export function runGridNTimes(
+  grid: Grid,
+  count: number,
+  cycleFn: Function
+): Grid {
   const nextGrid = cycleFn(grid);
 
   if (count === 1) return nextGrid;
@@ -193,23 +215,29 @@ export function runGridNTimes(grid: Grid, count: number, cycleFn: Function) {
 }
 
 export function runGridNTimes3D(grid: Grid, count: number) {
-  return runGridNTimes(grid, count, cycleGrid3D)
+  return runGridNTimes(grid, count, cycleGrid3D);
 }
 export function runGridNTimes4D(grid: Grid, count: number) {
-  return runGridNTimes(grid, count, cycleGrid4D)
+  return runGridNTimes(grid, count, cycleGrid4D);
 }
-
 
 export function createGrid(inputs: string[]): Grid {
   const maxX = inputs[0].length - 1;
   const maxY = inputs.length - 1;
 
-  let cells = {};
+  const cells = {
+    [0]: { // w
+      [0]: {}, // z
+    },
+  };
+  
   inputs.forEach((row, curY) => {
     const rowData = row.split("");
 
     rowData.forEach((cell, curX) => {
-      cells = setWith(Object, `[0][0][${curY}][${curX}]`, cell, cells);
+      // no need to check W and Z as they are always 0 to start with
+      if (!cells[0][0][curY]) cells[0][0][curY] = {};
+      cells[0][0][curY][curX] = cell;
     });
   });
 

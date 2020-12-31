@@ -26,20 +26,6 @@ describe("day 17", () => {
       expect(this.grid.sizing.maxZ).to.equal(0);
     });
 
-    //   z=-1
-    // #..
-    // ..#
-    // .#.
-
-    // z=0
-    // #.#
-    // .##
-    // .#.
-
-    // z=1
-    // #..
-    // ..#
-    // .#.
     it("should sucessfully cycle to the next grid", function () {
 
       const grid1 = runGridNTimes3D(this.grid, 1)
@@ -63,8 +49,6 @@ describe("day 17", () => {
     });
 
     it('should find the total cube count', function () {
-      this.timeout(10000)
-
       const finalGrid = runGridNTimes3D(this.grid, 6)
       const count = getGridActiveCount(finalGrid)
 
@@ -74,8 +58,6 @@ describe("day 17", () => {
 
   describe("part b examples", () => {
     it('should find the total cube count', function () {
-      this.timeout(10000)
-
       const finalGrid = runGridNTimes4D(this.grid, 6)
       const count = getGridActiveCount(finalGrid)
 
