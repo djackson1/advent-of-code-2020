@@ -65,6 +65,26 @@ export function getGridStr(grid: Grid, z: number) {
   return str;
 }
 
+export function getGridActiveCount (grid: Grid) : number {
+  const { cells, sizing: { minX, minY, minZ, maxX, maxY, maxZ}} = grid
+
+  let count = 0
+
+  for (let z = minZ; z <= maxZ; z++) {
+    for (let y = minY; y <= maxY; y++) {
+      for (let x = minX; x <= maxX; x++) {
+        const cell = getGridCell(cells, { x,y,z })
+
+        if(cell === ACTIVE) {
+          count += 1
+        }
+      }
+    }
+  }
+
+  return count
+}
+
 function getNextCellState(cells: Object, position: Position): string {
   const cur = getGridCell(cells, position);
   
@@ -81,11 +101,6 @@ function getNextCellState(cells: Object, position: Position): string {
     return acc;
   }, 0);
   
-  if(position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('AC', activeCount)
-    console.log("🚀 ~ file: main.ts ~ line 69 ~ getNextCellState ~ position", position)
-  }
-
   if (cur === ACTIVE) {
     if (activeCount === 2 || activeCount === 3) {
       return ACTIVE;
@@ -114,12 +129,7 @@ export function cycleGrid(grid: Grid): Grid {
   for (let z = minZ; z <= maxZ; z++) {
     for (let y = minY; y <= maxY; y++) {
       for (let x = minX; x <= maxX; x++) {
-        // console.log("zyx", z, y, x);
-
         const nextCell = getNextCellState(grid.cells, { x, y, z });
-        if (z === -1 && y === 0) {
-          console.log("zyx", z, y, x, nextCell);
-        }
         cells = setWith(Object, `[${z}][${y}][${x}]`, nextCell, cells);
       }
     }
