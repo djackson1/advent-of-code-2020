@@ -1,7 +1,7 @@
 import chai = require("chai");
 const { expect } = chai;
 import { getInputs } from "../../utils/files";
-import { cycleGrid, createGrid, getGridActiveCount, getGridStr } from "./main";
+import { createGrid, getGridActiveCount, getGridStr, runGridNTimes } from "./main";
 
 describe("day 17", () => {
   beforeEach(function () {
@@ -41,29 +41,39 @@ describe("day 17", () => {
     // ..#
     // .#.
     it("should sucessfully cycle to the next grid", function () {
-      const nextGrid = cycleGrid(this.grid);
 
-      const gridStr1 = getGridStr(nextGrid, -1);
+      const grid1 = runGridNTimes(this.grid, 1)
+
+      const gridStr1 = getGridStr(grid1, -1);
       expect(gridStr1).to.equal(`.....
 .....
 .#...
 ...#.
 ..#..`);
 
-      const gridStr2 = getGridStr(nextGrid, 0);
+      const gridStr2 = getGridStr(grid1, 0);
       expect(gridStr2).to.equal(`.....
 .....
 .#.#.
 ..##.
 ..#..`);
 
-      const gridCount = getGridActiveCount(nextGrid);
+      const gridCount = getGridActiveCount(grid1);
       expect(gridCount).to.equal(11);
 
-      const grid2 = cycleGrid(nextGrid);
+      const grid2 = runGridNTimes(this.grid, 2)
       const gridCount2 = getGridActiveCount(grid2);
       expect(gridCount2).to.equal(21);
     });
+
+    it('should find the total cube count', function () {
+      this.timeout(10000)
+
+      const finalGrid = runGridNTimes(this.grid, 6)
+      const count = getGridActiveCount(finalGrid)
+
+      expect(count).to.equal(112)
+    })
   });
 
   describe("part b examples", () => {

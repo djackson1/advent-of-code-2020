@@ -5,9 +5,11 @@ const ACTIVE = "#";
 const INACTIVE = ".";
 
 type GridSize = {
+  minW: number;
   minX: number;
   minY: number;
   minZ: number;
+  maxW: number;
   maxX: number;
   maxY: number;
   maxZ: number;
@@ -22,6 +24,7 @@ type Position = {
   x: number;
   y: number;
   z: number;
+  w: number;
 };
 
 function createDirs(): Position[] {
@@ -37,11 +40,11 @@ function createDirs(): Position[] {
   }
   return dirs;
 }
-const DIRS = createDirs();
+const DIRS_3D = createDirs();
 
 function getGridCell(cells: Object, position: Position): string {
-  const { x, y, z } = position;
-  return get(`[${z}][${y}][${x}]`, cells) || INACTIVE;
+  const { w, x, y, z } = position;
+  return get(`[${w}][${z}][${y}][${x}]`, cells) || INACTIVE;
 }
 
 export function getGridStr(grid: Grid, z: number) {
@@ -53,7 +56,7 @@ export function getGridStr(grid: Grid, z: number) {
   let str = "";
   for (let y = minY; y <= maxY; y++) {
     for (let x = minX; x <= maxX; x++) {
-      const pos = { z, y, x };
+      const pos = { w: 0, x, y, z };
       const cell = getGridCell(cells, pos);
       str += cell;
     }
@@ -68,7 +71,7 @@ export function getGridStr(grid: Grid, z: number) {
 export function getGridActiveCount(grid: Grid): number {
   const {
     cells,
-    sizing: { minX, minY, minZ, maxX, maxY, maxZ },
+    sizing: { minW, minX, minY, minZ, maxW, maxX, maxY, maxZ },
   } = grid;
 
   let count = 0;
@@ -76,10 +79,12 @@ export function getGridActiveCount(grid: Grid): number {
   for (let z = minZ; z <= maxZ; z++) {
     for (let y = minY; y <= maxY; y++) {
       for (let x = minX; x <= maxX; x++) {
-        const cell = getGridCell(cells, { x, y, z });
+        for (let w = minW; w <= maxW; w++) {
+          const cell = getGridCell(cells, { w, x, y, z });
 
-        if (cell === ACTIVE) {
-          count += 1;
+          if (cell === ACTIVE) {
+            count += 1;
+          }
         }
       }
     }
@@ -88,11 +93,12 @@ export function getGridActiveCount(grid: Grid): number {
   return count;
 }
 
-function getNextCellState(cells: Object, position: Position): string {
+function getNextCellState3D(cells: Object, position: Position): string {
   const cur = getGridCell(cells, position);
 
-  const activeCount = DIRS.reduce((acc, dir) => {
+  const activeCount = DIRS_3D.reduce((acc, dir) => {
     const pos = {
+      w: position.w,
       x: position.x + dir.x,
       y: position.y + dir.y,
       z: position.z + dir.z,
@@ -119,27 +125,51 @@ function getNextCellState(cells: Object, position: Position): string {
   return INACTIVE;
 }
 
-export function cycleGrid(grid: Grid): Grid {
+function cycleGrid(grid: Grid, nextCellStateFn: Function): Grid {
+  const minW = grid.sizing.minW - 1;
   const minX = grid.sizing.minX - 1;
   const minY = grid.sizing.minY - 1;
   const minZ = grid.sizing.minZ - 1;
+  const maxW = grid.sizing.maxW + 1;
   const maxX = grid.sizing.maxX + 1;
   const maxY = grid.sizing.maxY + 1;
   const maxZ = grid.sizing.maxZ + 1;
-
+  
   let cells = {};
-
+  
   for (let z = minZ; z <= maxZ; z++) {
     for (let y = minY; y <= maxY; y++) {
       for (let x = minX; x <= maxX; x++) {
-        const nextCell = getNextCellState(grid.cells, { x, y, z });
-        cells = setWith(Object, `[${z}][${y}][${x}]`, nextCell, cells);
+        for (let w = minW; w <= maxW; w++) {
+          const nextCell = nextCellStateFn(grid.cells, { w, x, y, z });
+          // const nextCell = getNextCellState3D(grid.cells, { w: 0, x, y, z });
+          cells = setWith(Object, `[${w}][${z}][${y}][${x}]`, nextCell, cells);
+        }
       }
     }
   }
-
-  const nextGrid = { cells, sizing: { minX, minY, minZ, maxX, maxY, maxZ } };
+  
+  const nextGrid = {
+    cells,
+    sizing: { minW, minX, minY, minZ, maxW, maxX, maxY, maxZ },
+  };
+  
   return nextGrid;
+}
+
+export function cycleGrid3D(grid: Grid): Grid {
+  return cycleGrid(grid, getNextCellState3D)
+}
+
+
+
+export function runGridNTimes(grid: Grid, count: number) {
+  console.log("🚀 ~ file: main.ts ~ line 167 ~ runGridNTimes ~ count", count)
+  const nextGrid = cycleGrid3D(grid);
+
+  if (count === 1) return nextGrid;
+
+  return runGridNTimes(nextGrid, count - 1);
 }
 
 export function createGrid(inputs: string[]): Grid {
@@ -151,16 +181,18 @@ export function createGrid(inputs: string[]): Grid {
     const rowData = row.split("");
 
     rowData.forEach((cell, curX) => {
-      cells = setWith(Object, `[0][${curY}][${curX}]`, cell, cells);
+      cells = setWith(Object, `[0][0][${curY}][${curX}]`, cell, cells);
     });
   });
 
   const grid = {
     cells,
     sizing: {
+      minW: 0,
       minX: 0,
       minY: 0,
       minZ: 0,
+      maxW: 0,
       maxX,
       maxY,
       maxZ: 0,
@@ -172,13 +204,11 @@ export function createGrid(inputs: string[]): Grid {
 
 export function a(): void {
   const inputs = getInputs(17);
-  let grid = createGrid(inputs);
+  const grid = createGrid(inputs);
 
-  for (let i = 0; i < 6; i++) {
-    grid = cycleGrid(grid);
-  }
+  const finalGrid = runGridNTimes(grid, 6);
 
-  const count = getGridActiveCount(grid);
+  const count = getGridActiveCount(finalGrid);
 
   console.log(`a = ${count}`);
 }
