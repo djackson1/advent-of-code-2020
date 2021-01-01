@@ -150,7 +150,12 @@ export function evaluateExpression(input: string): number {
 
 export function a(): void {
   const inputs = getInputs(18);
-  console.log(`a = ${"?"}`);
+
+  const value = inputs.reduce((acc, input) => {
+    return acc + evaluateExpression(input)
+  }, 0)
+
+  console.log(`a = ${value}`);
 }
 
 export function b(): void {
