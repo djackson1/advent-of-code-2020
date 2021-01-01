@@ -1,0 +1,29 @@
+{
+  // "extends": [
+  //   "eslint:recommended",
+  //   "plugin:@typescript-eslint/recommended",
+  //   "prettier/@typescript-eslint",
+  //   "plugin:prettier/recommended"
+  // ],
+  // "plugins": ["@typescript-eslint", "prettier"],
+  // "env": {
+  //   "browser": true,
+  //   "jasmine": true,
+  //   "jest": true,
+  //   "es6": true
+  // },
+  "rules": {
+    // "prettier/prettier": [
+    //   "error", 
+    //   { "singleQuote": true, "semi": false }
+    // ],
+    // "@typescript-eslint/no-use-before-define": "off",
+    // "@typescript-eslint/no-explicit-any": "off",
+    // "@typescript-eslint/class-name-casing":  ["error", { "allowUnderscorePrefix": true }],
+    // "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always", "allowUnderscorePrefix": true}],
+    // "@typescript-eslint/no-unused-vars": ["error", { "args": "none"}],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    // "semi":"off"
+  },
+  "parser": "@typescript-eslint/parser"
+}
