@@ -29,11 +29,15 @@ describe("day 18", () => {
 
       // { input: "((1 * 2) * (1 + 3 * 2) + 2) + 4", output: 24 },
       // { input: "((4 + 1) * (5 * 1 + 1) + 1) + 2", output: 22 },
-      // { input: "(1 + 3 * 2 * 1 + 1) + 2", output: 18 },
-      { input: "(1 * 2 + 3) + 4", output: 10 },
+      { input: "(1 + 3 * 2 * 1 + 1) + 2", output: 18 },
+      // 4 * 2 * 2 + 2
+      // 18
+
+      // { input: "(1 * 2 + 3) + 4", output: 9 },
+      // { input: "(1 + 2 * 3) + 2", output: 8 },
 
       // base cases
-      
+
       // { input: "1 + 2 * 3 + 4", output: 21 },
       // { input: "1 + 2 * 3 + 4 * 5 + 6", output: 231 },
       // { input: "1 + (2 * 3) + (4 * (5 + 6))", output: 51 },

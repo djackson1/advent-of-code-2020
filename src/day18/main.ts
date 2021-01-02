@@ -106,24 +106,44 @@ function convertTokensToExpressionsV2(tokens: Token[]): ExprResult {
   let curExpr = null;
 
   while (curTokens.length > 0) {
-    // console.log("convertTokensToExpressionsV2 ~ curTokens", curTokens)
     const token = curTokens.shift();
-    // console.log("convertTokensToExpressionsV2 ~ token", token)
     const { type } = token;
 
+    switch (type) {
+      case NUMBER: {
+        if (!curExpr) {
+          curExpr = token;
+        } else {
+          curExpr.value2 = token;
+        }
 
-    if (type === NUMBER) {
-      if (!curExpr) {
-        curExpr = token;
-      } else {
-        curExpr.value2 = token;
+        break;
       }
-    } else if (type === ADD) {
-      curExpr = {
-        type: type,
-        value1: curExpr,
-      };
-    } else if (type === MUL) {
+
+      case ADD: {
+        curExpr = {
+          type: type,
+          value1: curExpr,
+        };
+
+        break;
+      }
+    }
+
+    // if (type === NUMBER) {
+    //   if (!curExpr) {
+    //     curExpr = token;
+    //   } else {
+    //     curExpr.value2 = token;
+    //   }
+    // } else
+    // if (type === ADD) {
+    //   curExpr = {
+    //     type: type,
+    //     value1: curExpr,
+    //   };
+    // } else
+    if (type === MUL) {
       const { expr, tokens: tokensRest } = convertTokensToExpressionsV2(
         curTokens
       );
@@ -131,9 +151,9 @@ function convertTokensToExpressionsV2(tokens: Token[]): ExprResult {
       curExpr = {
         type,
         value1: curExpr,
-        value2: expr
-      }
-      curTokens = tokensRest
+        value2: expr,
+      };
+      curTokens = tokensRest;
     } else if (type === BRACKET_OPEN) {
       const { expr, tokens: tokensRest } = convertTokensToExpressionsV2(
         curTokens
@@ -149,10 +169,10 @@ function convertTokensToExpressionsV2(tokens: Token[]): ExprResult {
       if (curExpr.type === ADD) {
         curExpr.value2 = expr;
       } else if (curExpr.type === MUL) {
-        curExpr.value2 = expr
+        curExpr.value2 = expr;
       }
     } else if (token.type === BRACKET_CLOSE) {
-      console.log("convertTokensToExpressionsV2 ~ curTokens", curTokens)
+      console.log("convertTokensToExpressionsV2 ~ curTokens", curTokens);
       // const { expr, tokens: tokensRest } = convertTokensToExpressionsV2(
       //   curTokens
       // );
@@ -175,11 +195,11 @@ function runExpressions(expression: Expression | ExpressionNumber): number {
     return value;
   } else if (type === ADD) {
     const { value1, value2 } = expression as Expression;
-    console.log('ADD', value1, value2, '\n')
+    console.log("ADD", value1, value2, "\n");
     return runExpressions(value1) + runExpressions(value2);
   } else if (type === MUL) {
     const { value1, value2 } = expression as Expression;
-    console.log('MUL', value1, value2, '\n')
+    console.log("MUL", value1, value2, "\n");
     return runExpressions(value1) * runExpressions(value2);
   }
 }
@@ -206,7 +226,7 @@ export function evaluateExpressionV2(input: string): number {
   const { expr } = convertTokensToExpressionsV2(tokens);
   console.log("evaluateExpressionV2 ~ expr", JSON.stringify(expr, null, 2));
 
-  console.log('\n\n====>\n')
+  console.log("\n\n====>\n");
   const value = runExpressions(expr);
 
   return value;
