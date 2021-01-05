@@ -1,26 +1,16 @@
-import { assert } from "console";
-
 const { getInputs } = require("../../utils/files");
 
+const OP = "OP"
 const BRACKET_OPEN = "BRACKET_OPEN";
 const BRACKET_CLOSE = "BRACKET_CLOSE";
 const ADD = "ADD";
+const SUB = "SUB"
 const MUL = "MUL";
 const NUMBER = "NUMBER";
 
 type Token = {
   type: string;
-  value?: number;
-};
-type Value = number;
-type Expression = {
-  type: string;
-  value1: Expression | ExpressionNumber;
-  value2: Expression | ExpressionNumber;
-};
-type ExpressionNumber = {
-  type: string;
-  value: Value;
+  value: number | string;
 };
 
 function splitOn(input: string[], splitToken: string): string[] {
@@ -38,178 +28,129 @@ export function getTokens(input: string): Token[] {
   const tokens = splitOn(splitOn(splitOn([input], " "), "("), ")");
 
   return tokens.map((s) => {
-    if (s === "(") return { type: BRACKET_OPEN };
-    if (s === ")") return { type: BRACKET_CLOSE };
-    if (s === "+") return { type: ADD };
-    if (s === "*") return { type: MUL };
+    if (["(", ")", "+", "*", "-"].includes(s)) {
+      return { type: OP, value: s }
+    }
 
     return { type: NUMBER, value: Number(s) };
   });
 }
 
-type ExprResult = {
-  expr: Expression;
-  tokens: Token[];
-};
+const partAPrecedence = {
+  [ADD]: 10,
+  [MUL]: 10,
+  [SUB]: 10,
+  [BRACKET_OPEN]: 0
+}
 
-// I think this is converting to an AST... it's been a while
-function convertTokensToExpressions(tokens: Token[]): ExprResult {
-  let curTokens = [...tokens];
-  let curExpr = null;
+function evaluateOp(v1: number, v2: number, op: string): number {
+  console.log("🚀 ~ file: main.ts ~ line 46 ~ evaluateOp ~ op", op)
+  if (op === "+") return v1 + v2
+  if (op === "*") return v1 * v2
+  if(op === '-') return v1 - v2
 
-  while (true) {
-    const token = curTokens.shift();
-    const { type } = token;
+  return 99999
+}
+
+function runExpressions(rpn: Token[]): number {
+  const stack = []
+  
+  rpn.forEach(({ type, value }) => {
+    console.log("🚀 ~ file: main.ts ~ line 55 ~ runExpressions ~ stack", stack)
+    console.log("type", type, value)
+    if (type === NUMBER) {
+      stack.push(value)
+    } else if (type === OP) {
+      const v2 = stack.pop()
+      const v1 = stack.pop()
+      console.log("🚀 ~ file: main.ts ~ line 60 ~ rpn.forEach ~ v1", v1)
+      console.log("🚀 ~ file: main.ts ~ line 60 ~ rpn.forEach ~ v2", v2)
+
+
+      const newValue = evaluateOp(v1, v2, value as string)
+      stack.push(newValue)
+    }
+  })
+
+  console.log('stack', stack)
+
+  return stack[0]
+}
+
+// RPN: Reverse Polish Notation
+function convertTokensToRPN(tokens: Token[]): Token[] {
+
+  const queue = []
+  const stack = [];
+  
+  tokens.forEach(token => {
+    console.log("🚀 ~ file: main.ts ~ line 82 ~ convertTokensToRPN ~ queue", queue)
+    console.log("🚀 ~ file: main.ts ~ line 83 ~ convertTokensToRPN ~ stack", stack)
+    console.log("🚀 ~ file: main.ts ~ line 88 ~ convertTokensToRPN ~ token", token, '\n')
+
+    const { type, value } = token
 
     if (type === NUMBER) {
-      const { value } = token;
-      if (!curExpr) {
-        curExpr = token;
+      queue.push(token)
+      return
+    }
+
+    if (value === '(') {
+      stack.unshift(token)
+      return
+    }
+
+    if (value === ')') {
+      while (stack.length > 0) {
+        const nextChar = stack[stack.length - 1]
+
+        if (nextChar.value !== '(') {
+          queue.push(stack.pop())
+        } else {
+          stack.pop()
+          break
+        }
+      }
+      return 
+    }
+
+    // an operator
+    while (stack.length > 0) {
+      const nextToken = stack[0] // stack.length - 1]
+      const a = partAPrecedence[token.value]
+      const b = partAPrecedence[nextToken.value]
+      if (a < b) {
+        queue.push(stack.shift());
       } else {
-        curExpr.value2 = token;
+        break
       }
-    } else if (type === ADD || type === MUL) {
-      curExpr = {
-        type: type,
-        value1: curExpr,
-      };
-    } else if (type === BRACKET_OPEN) {
-      // expr
-      // ...restTokens
-      const { expr, tokens: tokensRest } = convertTokensToExpressions(
-        curTokens
-      );
-      curTokens = tokensRest;
-
-      if (!curExpr) {
-        curExpr = expr;
-        continue;
-      }
-
-      if (curExpr.type === ADD || curExpr.type === MUL) {
-        curExpr.value2 = expr;
-      }
-    } else if (token.type === BRACKET_CLOSE) {
-      return { expr: curExpr, tokens: curTokens };
     }
+    stack.unshift(token);
+  })
 
-    if (curTokens.length === 0) {
-      break;
-    }
+  while (stack.length > 0) {
+    queue.push(stack.shift())
   }
 
-  return { expr: curExpr, tokens: [] };
+  return queue
+
 }
 
-function convertTokensToExpressionsV2(tokens: Token[]): ExprResult {
-  let curTokens = [...tokens];
-  let curExpr = null;
-
-  while (curTokens.length > 0) {
-    // console.log("convertTokensToExpressionsV2 ~ curTokens", curTokens)
-    const token = curTokens.shift();
-    // console.log("convertTokensToExpressionsV2 ~ token", token)
-    const { type } = token;
-
-
-    if (type === NUMBER) {
-      if (!curExpr) {
-        curExpr = token;
-      } else {
-        curExpr.value2 = token;
-      }
-    } else if (type === ADD) {
-      curExpr = {
-        type: type,
-        value1: curExpr,
-      };
-    } else if (type === MUL) {
-      const { expr, tokens: tokensRest } = convertTokensToExpressionsV2(
-        curTokens
-      );
-
-      curExpr = {
-        type,
-        value1: curExpr,
-        value2: expr
-      }
-      curTokens = tokensRest
-    } else if (type === BRACKET_OPEN) {
-      const { expr, tokens: tokensRest } = convertTokensToExpressionsV2(
-        curTokens
-      );
-      curTokens = tokensRest;
-
-      // console.log("convertTokensToExpressionsV2 ~ curExpr", curExpr)
-      if (!curExpr) {
-        curExpr = expr;
-        continue;
-      }
-
-      if (curExpr.type === ADD) {
-        curExpr.value2 = expr;
-      } else if (curExpr.type === MUL) {
-        curExpr.value2 = expr
-      }
-    } else if (token.type === BRACKET_CLOSE) {
-      console.log("convertTokensToExpressionsV2 ~ curTokens", curTokens)
-      // const { expr, tokens: tokensRest } = convertTokensToExpressionsV2(
-      //   curTokens
-      // );
-
-      // if(!)
-
-      return { expr: curExpr, tokens: curTokens };
-    }
-  }
-
-  return { expr: curExpr, tokens: [] };
-}
-
-function runExpressions(expression: Expression | ExpressionNumber): number {
-  const { type } = expression;
-
-  if (type === NUMBER) {
-    const { value } = expression as ExpressionNumber;
-    // console.log('NO', value, '\n')
-    return value;
-  } else if (type === ADD) {
-    const { value1, value2 } = expression as Expression;
-    console.log('ADD', value1, value2, '\n')
-    return runExpressions(value1) + runExpressions(value2);
-  } else if (type === MUL) {
-    const { value1, value2 } = expression as Expression;
-    console.log('MUL', value1, value2, '\n')
-    return runExpressions(value1) * runExpressions(value2);
-  }
-}
 
 export function evaluateExpression(input: string): number {
   // split into tokens
   const tokens = getTokens(input);
 
-  // some sort of tree?
-  const { expr } = convertTokensToExpressions(tokens);
+  const rpn = convertTokensToRPN(tokens)
+  console.log("🚀 ~ file: main.ts ~ line 59 ~ evaluateExpression ~ rpn", rpn)
 
-  // process?
-  const value = runExpressions(expr);
+  const value = runExpressions(rpn)
 
-  return value;
+  return value
 }
 
 export function evaluateExpressionV2(input: string): number {
-  // split into tokens
-  const tokens = getTokens(input);
-  console.log("evaluateExpressionV2 ~ tokens", tokens);
-
-  // some sort of tree?
-  const { expr } = convertTokensToExpressionsV2(tokens);
-  console.log("evaluateExpressionV2 ~ expr", JSON.stringify(expr, null, 2));
-
-  console.log('\n\n====>\n')
-  const value = runExpressions(expr);
-
-  return value;
+  return 2
 }
 
 export function a(): void {
