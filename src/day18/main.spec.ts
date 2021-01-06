@@ -5,8 +5,11 @@ import { evaluateExpression, evaluateExpressionV2 } from "./main";
 describe("day 18", () => {
   describe.only("part a examples", () => {
     const examples = [
-      { input: "2 + 6 * (3 - 4)", output: -8 },
+      // { input: "2 + 6 * (3 - 4)", output: -8 },
       // { input: "1 + 2 * 3 + 4 * 5 + 6", output: 71 },
+
+      { input: "2 * 5 - 3 + 1", output: 8 },
+      { input: "3 + ( 2 * 1 )", output: 5 },
       // { input: "1 + (2 * 3) * 4", output: 28 },
       // { input: "2 * 3 + (4 * 5)", output: 26 },
       // { input: "5 + (8 * 3 + 9 + 3 * 4 * 3)", output: 437 },
