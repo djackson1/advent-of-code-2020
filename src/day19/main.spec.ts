@@ -30,8 +30,12 @@ describe('day 19', () => {
   // The whole message must match all of rule 0; there can't be extra unmatched characters in the message.
   // (For example, aaaabbb might appear to match rule 0 above, but it has an extra unmatched b on the end.)
   describe('part a examples', () => {
+    const scenarios = [
+
+    ]
+    
     it('should find the count of matching messages', function () {
-      expect(true).to.be.true
+      
     })
   })
 
