@@ -26,3 +26,7 @@ this will output both part a and b
 ```bash
 node src/day<NUMBER>/main.js
 ```
+
+## thoughts
+
+yeah we also got to day 14 this year before it became too much to handle!
